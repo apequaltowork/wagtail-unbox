@@ -1,0 +1,5 @@
+# Wagtail Unboxed — pinned for the whole series so every episode is reproducible.
+# Wagtail 7.4 declares only `Django>=5.2` (no upper bound), so an unpinned install
+# drifts. We pin both. See docs/prerequisites.md.
+wagtail==7.4.3
+Django==6.1.1
