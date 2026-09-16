@@ -1,0 +1,351 @@
+1
+00:00:00,350 --> 00:00:03,550
+What Wagtail actually is.
+
+2
+00:00:04,350 --> 00:00:09,869
+By the end of this episode you will have Wagtail installed, a project created,
+
+3
+00:00:09,869 --> 00:00:14,186
+and you will be logged into a real content management system.
+
+4
+00:00:14,186 --> 00:00:15,389
+And then we stop.
+
+5
+00:00:15,389 --> 00:00:19,776
+Because episode two reads every single file it just generated.
+
+6
+00:00:20,576 --> 00:00:22,574
+First, where Wagtail sits.
+
+7
+00:00:22,574 --> 00:00:26,953
+Django is a web framework with no content editing at all.
+
+8
+00:00:26,953 --> 00:00:30,564
+WordPress is a PHP CMS with its own everything.
+
+9
+00:00:30,564 --> 00:00:36,942
+Wagtail is in between: Django apps that add a page tree and a genuinely good editor
+
+10
+00:00:36,942 --> 00:00:39,554
+on top of a normal Django project.
+
+11
+00:00:40,354 --> 00:00:43,834
+A fair question: Django already has an admin.
+
+12
+00:00:43,834 --> 00:00:48,860
+But the Django admin is a database table editor, built for staff.
+
+13
+00:00:48,860 --> 00:00:51,722
+Wagtail's admin is a publishing tool.
+
+14
+00:00:51,722 --> 00:00:56,439
+Drafts, previews, workflow, a page hierarchy, image cropping.
+
+15
+00:00:56,439 --> 00:00:59,919
+You would not hand a client the Django admin.
+
+16
+00:00:59,919 --> 00:01:01,852
+You would hand them this.
+
+17
+00:01:02,652 --> 00:01:05,032
+So here is the one sentence version.
+
+18
+00:01:05,032 --> 00:01:09,792
+Wagtail is what you reach for when you would write a Django site anyway,
+
+19
+00:01:09,792 --> 00:01:13,758
+but somebody who is not you needs to change the words on it.
+
+20
+00:01:14,558 --> 00:01:18,878
+Start with an empty folder and a virtual environment.
+
+21
+00:01:18,878 --> 00:01:24,177
+If you watched episode zero b, this is exactly what we practised.
+
+22
+00:01:24,177 --> 00:01:26,297
+Make it, then activate it.
+
+23
+00:01:26,297 --> 00:01:29,639
+Watch for the .venv prefix on the prompt.
+
+24
+00:01:29,639 --> 00:01:34,856
+On Mac and Linux the activate line is source .venv/bin/activate.
+
+25
+00:01:35,656 --> 00:01:37,280
+Now install Wagtail.
+
+26
+00:01:37,280 --> 00:01:39,391
+Watch the dependency list.
+
+27
+00:01:39,391 --> 00:01:40,771
+Two worth naming.
+
+28
+00:01:40,771 --> 00:01:44,505
+Treebeard, which is what stores the page tree.
+
+29
+00:01:44,505 --> 00:01:47,590
+And Pillow, which is image processing,
+
+30
+00:01:47,590 --> 00:01:52,786
+so Wagtail can generate resized versions of whatever you upload.
+
+31
+00:01:53,586 --> 00:01:57,804
+You might wonder why we pinned Django as well as Wagtail.
+
+32
+00:01:57,804 --> 00:02:03,131
+Because Wagtail seven four only asks for Django five point two or newer,
+
+33
+00:02:03,131 --> 00:02:04,611
+with no upper limit.
+
+34
+00:02:04,611 --> 00:02:08,755
+Unpinned, you get whatever Django shipped most recently,
+
+35
+00:02:08,755 --> 00:02:13,194
+and three episodes from now your screen stops matching mine.
+
+36
+00:02:13,194 --> 00:02:13,860
+Pin both.
+
+37
+00:02:14,660 --> 00:02:18,933
+Check the version, then create the project.
+
+38
+00:02:18,933 --> 00:02:20,126
+One command.
+
+39
+00:02:20,926 --> 00:02:26,175
+Those two arguments trip people up constantly, so let us be precise.
+
+40
+00:02:26,175 --> 00:02:29,957
+Studio is the name of the Django project package.
+
+41
+00:02:29,957 --> 00:02:32,195
+Ours is a design studio site.
+
+42
+00:02:32,195 --> 00:02:35,205
+And site is the folder to create it in.
+
+43
+00:02:35,205 --> 00:02:40,840
+Wagtail creates that folder for you, so you do not need to make it first.
+
+44
+00:02:41,640 --> 00:02:45,930
+And one warning that genuinely costs people an afternoon.
+
+45
+00:02:45,930 --> 00:02:48,188
+Do not name your project site.
+
+46
+00:02:48,188 --> 00:02:51,876
+Python already has a built in module called site,
+
+47
+00:02:51,876 --> 00:02:56,919
+and shadowing it gives you import errors that make no sense at all.
+
+48
+00:02:56,919 --> 00:02:59,930
+The same goes for test, json, and email.
+
+49
+00:02:59,930 --> 00:03:02,188
+The folder can be called site.
+
+50
+00:03:02,188 --> 00:03:03,618
+The package cannot.
+
+51
+00:03:04,418 --> 00:03:06,421
+Now build the database.
+
+52
+00:03:06,421 --> 00:03:10,166
+And look at what goes past: 184 migrations,
+
+53
+00:03:10,166 --> 00:03:14,172
+before you have written a single line of code.
+
+54
+00:03:14,172 --> 00:03:16,872
+Those are Wagtail's own tables.
+
+55
+00:03:16,872 --> 00:03:21,140
+Pages, images, documents, revisions, permissions.
+
+56
+00:03:21,940 --> 00:03:25,279
+And notice what you did not have to do.
+
+57
+00:03:25,279 --> 00:03:27,676
+There is no database server.
+
+58
+00:03:27,676 --> 00:03:33,240
+That created a file called db.sqlite3, right there in the folder.
+
+59
+00:03:33,240 --> 00:03:35,551
+SQLite ships inside Python.
+
+60
+00:03:35,551 --> 00:03:40,174
+Postgres turns up in episode thirteen, and not before.
+
+61
+00:03:40,974 --> 00:03:42,417
+Create your login.
+
+62
+00:03:42,417 --> 00:03:48,431
+One thing that worries people: the password is invisible while you type it.
+
+63
+00:03:48,431 --> 00:03:50,195
+Your keyboard is fine.
+
+64
+00:03:50,195 --> 00:03:52,440
+Keep typing and press enter.
+
+65
+00:03:53,240 --> 00:03:54,314
+And run it.
+
+66
+00:03:54,314 --> 00:03:58,706
+Your site is now live on port eight thousand.
+
+67
+00:03:59,506 --> 00:04:01,216
+Two addresses matter.
+
+68
+00:04:01,216 --> 00:04:06,266
+The site itself, which right now shows Wagtail's welcome page,
+
+69
+00:04:06,266 --> 00:04:09,117
+and we delete that in episode four.
+
+70
+00:04:09,117 --> 00:04:11,397
+And/admin, which is the CMS.
+
+71
+00:04:11,397 --> 00:04:15,388
+Log in there with the superuser you just created.
+
+72
+00:04:16,188 --> 00:04:19,492
+Open the pages section and notice something.
+
+73
+00:04:19,492 --> 00:04:21,144
+A page already exists.
+
+74
+00:04:21,144 --> 00:04:25,499
+You did not create it, and it did not come from a fixture.
+
+75
+00:04:25,499 --> 00:04:29,404
+A migration made it, the first time you ran migrate.
+
+76
+00:04:29,404 --> 00:04:33,759
+That file is one of the more surprising things in the box,
+
+77
+00:04:33,759 --> 00:04:35,862
+and we open it next episode.
+
+78
+00:04:36,662 --> 00:04:37,601
+Last thing.
+
+79
+00:04:37,601 --> 00:04:39,819
+Put it in git, and tag it.
+
+80
+00:04:39,819 --> 00:04:45,707
+Gitignore the virtual environment, the database and the media folder.
+
+81
+00:04:45,707 --> 00:04:50,144
+Your content is yours; the code is what gets shared.
+
+82
+00:04:50,944 --> 00:04:55,232
+We are leaving that generated project completely untouched,
+
+83
+00:04:55,232 --> 00:04:59,521
+because next episode is a guided tour of exactly this tree.
+
+84
+00:04:59,521 --> 00:05:00,829
+Twenty nine files.
+
+85
+00:05:00,829 --> 00:05:03,519
+Most tutorials explain three of them.
+
+86
+00:05:03,519 --> 00:05:08,098
+We read all of them, including the ones you are told to ignore.
+
+87
+00:05:08,898 --> 00:05:15,469
+Next episode, we open the box and read every file.
+
+88
+00:05:15,469 --> 00:05:18,098
+Thanks for watching.
