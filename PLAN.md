@@ -61,7 +61,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 ### Act 1 — Unboxing
 | # | Title | Tag | Status |
 |---|---|---|---|
-| 01 | What Wagtail Actually Is | `ep01-end` | Code built, script written |
+| 01 | What Wagtail Actually Is | `ep01-end` | ✅ **Published** |
 | 02 | Opening the Box: Every File Explained | `ep02-end` | Code built, script written |
 | 03 | The Page Model & the Tree | `ep03-end` | Not started |
 
@@ -184,16 +184,18 @@ ran, or it will lie on camera.
 - Wagtail 7.4.3 project built and verified; admin login confirmed
 - Ep 0a **published**: https://www.youtube.com/watch?v=ck4T3lnkhqs
 - Ep 0b **published**: https://www.youtube.com/watch?v=7AtlyySq4l4
+- Ep 1 **published**: https://www.youtube.com/watch?v=X7FgE9j1XLY
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 1 — the real test, needs a terminal on screen. Either animate the terminal from the
-   real captured output, or leave marked gaps for a screencast
-2. Ep 2 — render from the existing script
-3. Ep 3 onward — code first, then script
+1. Ep 2 — render from the existing script; no code changes, so the tree is identical to ep 1
+2. Ep 3 onward — build the code first, then script, then render
+
+The animated terminal (`video/term.py`) is proven and reusable: commands type out, then
+real captured output appears. Every code episode from here uses it.
 
 **Open questions**
 - Deploy target for ep 14 — decide during ep 13

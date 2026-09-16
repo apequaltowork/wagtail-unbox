@@ -77,6 +77,9 @@ class Scene:
     hold: float | None = None      # force a duration (seconds)
     classes: str = ""              # extra classes on .slide
     full_page: str = ""            # complete HTML doc; bypasses the .slide wrapper
+    # Animated scene: one body-HTML string per frame, played at FPS and then
+    # held on the last frame for whatever narration time remains. See term.py.
+    frames: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -92,7 +95,9 @@ class Episode:
     intro_say: str = ""
     outro_say: str = ""
     intro_hold: float = 4.0
-    outro_hold: float = 7.0
+    # 10s on the end card: YouTube end-screen widgets need a 5s minimum and will
+    # cover whatever they sit on, so this leaves ~5s of the card readable first.
+    outro_hold: float = 10.0
 
     @property
     def ep_number(self) -> str:
@@ -225,13 +230,45 @@ $synth.Dispose()
                    check=True, capture_output=True, text=True)
 
 
-def make_segment(png: Path, wav: Path | None, seconds: float, dest: Path) -> None:
+def make_animated_video(frames: list[Path], seconds: float, dest: Path) -> Path:
+    """Play the frames at FPS, then hold the last one for the rest of the scene."""
+    per = 1.0 / FPS
+    played = len(frames) * per
+    tail = max(seconds - played, 0.0)
+
+    listing = dest.with_suffix(".concat.txt")
+    lines = []
+    for f in frames:
+        lines.append(f"file '{f.as_posix()}'\nduration {per:.5f}\n")
+    if tail > 0:
+        lines.append(f"file '{frames[-1].as_posix()}'\nduration {tail:.5f}\n")
+    # The concat demuxer ignores the final entry's duration, so repeat it.
+    lines.append(f"file '{frames[-1].as_posix()}'\n")
+    listing.write_text("".join(lines), encoding="utf-8")
+
+    silent = dest.with_suffix(".silent.mp4")
+    run([need("ffmpeg"), "-y", "-loglevel", "error", "-f", "concat", "-safe", "0",
+         # Plain -r gives constant frame rate, which is what we want: the concat
+         # durations are already 1/FPS. (ffmpeg 9 rejects -r together with
+         # -fps_mode vfr, and -vsync no longer exists.)
+         "-i", str(listing), "-r", str(FPS),
+         "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+         "-pix_fmt", "yuv420p", "-t", f"{seconds:.3f}", str(silent)])
+    return silent
+
+
+def make_segment(png: Path, wav: Path | None, seconds: float, dest: Path,
+                 frames: list[Path] | None = None) -> None:
     ffmpeg = need("ffmpeg")
     fade_out_at = max(seconds - FADE, 0.01)
     vf = f"fade=t=in:st=0:d={FADE},fade=t=out:st={fade_out_at:.3f}:d={FADE},format=yuv420p"
 
-    cmd = [ffmpeg, "-y", "-loglevel", "error",
-           "-loop", "1", "-framerate", str(FPS), "-t", f"{seconds:.3f}", "-i", str(png)]
+    if frames:
+        source = make_animated_video(frames, seconds, dest)
+        cmd = [ffmpeg, "-y", "-loglevel", "error", "-i", str(source)]
+    else:
+        cmd = [ffmpeg, "-y", "-loglevel", "error",
+               "-loop", "1", "-framerate", str(FPS), "-t", f"{seconds:.3f}", "-i", str(png)]
     if wav:
         # Pad the audio so narration sits inside the scene with lead-in/out.
         cmd += ["-i", str(wav),
@@ -271,15 +308,31 @@ def build(ep: Episode, silent: bool, stills_only: bool, only: int | None,
     print(f"\n{ep.title}\n{'=' * len(ep.title)}")
     print(f"{len(scenes)} scene(s) -> {out}\n")
 
-    # 1. slides
+    # 1. slides (a scene is either one still, or a frame sequence)
     pngs: list[Path] = []
+    seqs: list[list[Path] | None] = []
     for i, sc in enumerate(scenes):
         stem = f"{i:03d}_{sc.id}"
-        html = write_html(sc, ep, work / f"{stem}.html")
-        png = work / f"{stem}.png"
-        shoot(chrome, html, png)
-        pngs.append(png)
-        print(f"  slide  {stem}.png")
+        if sc.frames:
+            frame_dir = work / stem
+            frame_dir.mkdir(exist_ok=True)
+            shots: list[Path] = []
+            for n, body in enumerate(sc.frames):
+                frame = Scene(id=sc.id, body=body, classes=sc.classes)
+                html = write_html(frame, ep, frame_dir / f"f{n:05d}.html")
+                png = frame_dir / f"f{n:05d}.png"
+                shoot(chrome, html, png)
+                shots.append(png)
+            seqs.append(shots)
+            pngs.append(shots[-1])
+            print(f"  anim   {stem}  ({len(shots)} frames)")
+        else:
+            html = write_html(sc, ep, work / f"{stem}.html")
+            png = work / f"{stem}.png"
+            shoot(chrome, html, png)
+            seqs.append(None)
+            pngs.append(png)
+            print(f"  slide  {stem}.png")
 
     if stills_only:
         print(f"\nStills only. Open {work} to review the design.")
@@ -290,7 +343,8 @@ def build(ep: Episode, silent: bool, stills_only: bool, only: int | None,
     wavs: list[Path | None] = []
     if silent:
         for sc in scenes:
-            durations.append(sc.hold or SILENT_DEFAULT)
+            floor = len(sc.frames) / FPS if sc.frames else 0.0
+            durations.append(max(sc.hold or SILENT_DEFAULT, floor))
             wavs.append(None)
     else:
         todo = [(f"{i:03d}_{sc.id}", sc.say) for i, sc in enumerate(scenes) if sc.say.strip()]
@@ -304,19 +358,20 @@ def build(ep: Episode, silent: bool, stills_only: bool, only: int | None,
             wav = work / f"{stem}.mp3"
             if not wav.exists():
                 wav = work / f"{stem}.wav"
+            floor = len(sc.frames) / FPS if sc.frames else 0.0
             if sc.say.strip() and wav.exists():
                 spoken = probe_duration(wav)
-                durations.append(sc.hold or (spoken + LEAD_IN + LEAD_OUT))
+                durations.append(max(sc.hold or (spoken + LEAD_IN + LEAD_OUT), floor))
                 wavs.append(wav)
             else:
-                durations.append(sc.hold or SILENT_DEFAULT)
+                durations.append(max(sc.hold or SILENT_DEFAULT, floor))
                 wavs.append(None)
 
     # 3. segments
     segs: list[Path] = []
     for i, (png, wav, secs) in enumerate(zip(pngs, wavs, durations)):
         seg = work / f"seg_{i:03d}.mp4"
-        make_segment(png, wav, secs, seg)
+        make_segment(png, wav, secs, seg, frames=seqs[i])
         segs.append(seg)
         print(f"  segment {i:03d}  {secs:6.2f}s")
 

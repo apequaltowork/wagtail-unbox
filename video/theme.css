@@ -182,3 +182,15 @@ pre.code .bad { color: var(--red); }
 .tree .label { color: var(--fg); }
 .tree .meta { color: var(--muted); font-size: 32px; }
 .tree .node.off { opacity: .25; }
+
+/* ---- animated terminal (term.py) ---- */
+.term-big { font-size: 32px; line-height: 1.5; }
+.term-big .body { min-height: 560px; }
+.term .hl-out { color: var(--teal); }
+/* Solid block cursor; it reads as "typing" even in a single frame. */
+.term .cur {
+  background: var(--teal);
+  display: inline-block;
+  width: .55em;
+  vertical-align: baseline;
+}
