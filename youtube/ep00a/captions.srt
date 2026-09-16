@@ -1,0 +1,359 @@
+1
+00:00:00,350 --> 00:00:01,734
+Wagtail Unboxed.
+
+2
+00:00:01,734 --> 00:00:03,550
+Learning by building.
+
+3
+00:00:04,350 --> 00:00:05,943
+That is a real website.
+
+4
+00:00:05,943 --> 00:00:10,028
+And that is somebody editing it, without touching any code.
+
+5
+00:00:10,028 --> 00:00:14,945
+By the end of this series you will have built it, from an empty folder,
+
+6
+00:00:14,945 --> 00:00:17,784
+and you will understand every file in it.
+
+7
+00:00:18,584 --> 00:00:20,482
+So, what is Wagtail?
+
+8
+00:00:20,482 --> 00:00:25,226
+It is a content management system built on Django.
+
+9
+00:00:26,026 --> 00:00:30,516
+It is not a fork of Django, and it is not a competitor to it.
+
+10
+00:00:30,516 --> 00:00:34,049
+It is a set of Django apps that you pip install.
+
+11
+00:00:34,049 --> 00:00:35,816
+Models are still models.
+
+12
+00:00:35,816 --> 00:00:38,024
+Templates are still templates.
+
+13
+00:00:38,024 --> 00:00:43,103
+What Wagtail adds is a page tree, a genuinely good editing interface,
+
+14
+00:00:43,103 --> 00:00:47,740
+an image system, and a content block system called StreamField.
+
+15
+00:00:48,540 --> 00:00:54,305
+If you already write Django, you already know about seventy percent of Wagtail.
+
+16
+00:00:54,305 --> 00:00:57,078
+This series is about the other thirty.
+
+17
+00:00:57,878 --> 00:00:59,101
+Who is this for?
+
+18
+00:00:59,101 --> 00:01:00,095
+Three groups.
+
+19
+00:01:00,095 --> 00:01:05,218
+Django developers who keep getting asked, can the client edit this.
+
+20
+00:01:05,218 --> 00:01:11,488
+Agency and freelance developers, building sites for people who are not developers.
+
+21
+00:01:11,488 --> 00:01:13,706
+And people leaving WordPress,
+
+22
+00:01:13,706 --> 00:01:18,752
+who want that editing experience without the PHP plugin ecosystem.
+
+23
+00:01:19,552 --> 00:01:23,218
+Now the part I am not going to soften.
+
+24
+00:01:24,018 --> 00:01:25,881
+You need basic Python.
+
+25
+00:01:25,881 --> 00:01:28,675
+Functions, classes, imports, pip.
+
+26
+00:01:28,675 --> 00:01:30,368
+And you need Django.
+
+27
+00:01:30,368 --> 00:01:34,009
+Models, migrations, templates, settings.py.
+
+28
+00:01:34,009 --> 00:01:38,835
+That is the real prerequisite, because Wagtail is Django.
+
+29
+00:01:38,835 --> 00:01:42,561
+Plus enough HTML and CSS to edit a template,
+
+30
+00:01:42,561 --> 00:01:47,556
+and enough command line to run a command and read an error.
+
+31
+00:01:48,356 --> 00:01:52,422
+If models.py and make migrations are not familiar yet,
+
+32
+00:01:52,422 --> 00:01:56,638
+pause this video and go do the official Django tutorial.
+
+33
+00:01:56,638 --> 00:01:58,896
+It is about a weekend of work.
+
+34
+00:01:58,896 --> 00:02:00,026
+Then come back.
+
+35
+00:02:00,026 --> 00:02:02,585
+You will get far more out of this,
+
+36
+00:02:02,585 --> 00:02:08,006
+and you will not spend fourteen episodes copying code you cannot change.
+
+37
+00:02:08,806 --> 00:02:14,438
+What you do not need: any prior Wagtail, any prior CMS experience,
+
+38
+00:02:14,438 --> 00:02:17,766
+no front end frameworks, and no Docker.
+
+39
+00:02:17,766 --> 00:02:20,752
+Wagtail itself is taught from zero.
+
+40
+00:02:21,552 --> 00:02:22,945
+One practical note.
+
+41
+00:02:22,945 --> 00:02:28,297
+I record on Windows, so Windows commands are what you will see on screen.
+
+42
+00:02:28,297 --> 00:02:34,383
+Every episode ships a commands file in the repo with the mac and Linux equivalents.
+
+43
+00:02:34,383 --> 00:02:37,242
+Nothing in this series is Windows only.
+
+44
+00:02:38,042 --> 00:02:39,506
+Here is the plan.
+
+45
+00:02:39,506 --> 00:02:42,348
+Fourteen episodes, in three acts.
+
+46
+00:02:42,348 --> 00:02:47,601
+One concept per episode, fifteen to twenty five minutes each,
+
+47
+00:02:47,601 --> 00:02:50,012
+and nothing gets hand waved.
+
+48
+00:02:50,812 --> 00:02:53,381
+Act one, episodes one to three.
+
+49
+00:02:53,381 --> 00:02:54,127
+Unboxing.
+
+50
+00:02:54,127 --> 00:03:00,426
+We create the project, and then we read every single file Wagtail generated.
+
+51
+00:03:00,426 --> 00:03:02,415
+All twenty nine of them.
+
+52
+00:03:02,415 --> 00:03:08,134
+Most tutorials skip that, and it is exactly why people stay confused.
+
+53
+00:03:08,934 --> 00:03:11,838
+Act two, episodes four to eleven.
+
+54
+00:03:11,838 --> 00:03:12,630
+We build.
+
+55
+00:03:12,630 --> 00:03:18,791
+Templates and static files, StreamField, images and documents, a blog,
+
+56
+00:03:18,791 --> 00:03:24,600
+reusable snippets, navigation, a working contact form, and search.
+
+57
+00:03:25,400 --> 00:03:28,754
+And act three, episodes twelve to fourteen.
+
+58
+00:03:28,754 --> 00:03:29,456
+Shipping.
+
+59
+00:03:29,456 --> 00:03:35,150
+Polishing the editor experience for the client, real production settings,
+
+60
+00:03:35,150 --> 00:03:37,802
+and deploying to an actual domain.
+
+61
+00:03:38,602 --> 00:03:40,897
+Everything is in a public repo.
+
+62
+00:03:40,897 --> 00:03:43,265
+Every episode ends on a git tag.
+
+63
+00:03:43,265 --> 00:03:49,261
+So if you want to start at episode seven, you check out the tag from episode six,
+
+64
+00:03:49,261 --> 00:03:53,332
+and you have exactly the code that episode begins with.
+
+65
+00:03:54,132 --> 00:03:56,705
+The database is not in the repo.
+
+66
+00:03:56,705 --> 00:04:00,404
+You make your own content as you follow along.
+
+67
+00:04:00,404 --> 00:04:01,932
+That is deliberate.
+
+68
+00:04:01,932 --> 00:04:06,918
+Actually making content is how the admin stops being abstract.
+
+69
+00:04:07,718 --> 00:04:10,069
+And what this series is not.
+
+70
+00:04:10,069 --> 00:04:12,421
+It is not a Django tutorial.
+
+71
+00:04:12,421 --> 00:04:14,856
+It is not a front end course.
+
+72
+00:04:14,856 --> 00:04:19,727
+There is no React, no Tailwind, and no Node, at any point.
+
+73
+00:04:19,727 --> 00:04:24,934
+We write plain CSS by hand so the episodes stay about Wagtail.
+
+74
+00:04:24,934 --> 00:04:27,873
+It is not a headless or API series.
+
+75
+00:04:27,873 --> 00:04:32,492
+And it is not a clone the repo and you are done series.
+
+76
+00:04:32,492 --> 00:04:34,424
+You will type the code.
+
+77
+00:04:35,224 --> 00:04:40,123
+Versions are pinned, so the code on screen is the code you get.
+
+78
+00:04:40,123 --> 00:04:45,488
+Wagtail seven point four point three, Django six point one point one,
+
+79
+00:04:45,488 --> 00:04:47,509
+Python three point twelve.
+
+80
+00:04:47,509 --> 00:04:49,142
+Wagtail eight is out.
+
+81
+00:04:49,142 --> 00:04:54,352
+We are on seven point four on purpose: wider package compatibility,
+
+82
+00:04:54,352 --> 00:04:56,218
+and it ages more slowly.
+
+83
+00:04:57,018 --> 00:05:00,049
+Next episode, we set up your machine.
+
+84
+00:05:00,049 --> 00:05:03,163
+Python, git, and virtual environments.
+
+85
+00:05:03,163 --> 00:05:08,079
+But if you already have Python, a virtualenv habit, and git,
+
+86
+00:05:08,079 --> 00:05:11,683
+then skip it and go straight to episode one.
+
+87
+00:05:11,683 --> 00:05:13,404
+I will see you there.
+
+88
+00:05:14,204 --> 00:05:16,055
+Thanks for watching.
+
+89
+00:05:16,055 --> 00:05:18,553
+Everything is linked below.
+
+90
+00:05:18,553 --> 00:05:20,404
+Let us open the box.

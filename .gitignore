@@ -1,0 +1,27 @@
+# Virtualenv
+.venv/
+venv/
+
+# Django / Wagtail
+*.sqlite3
+media/
+staticfiles/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+
+# Rendered video output (large, reproducible from scenes.py)
+youtube/*/out/
+video/out/
