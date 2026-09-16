@@ -62,7 +62,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 | # | Title | Tag | Status |
 |---|---|---|---|
 | 01 | What Wagtail Actually Is | `ep01-end` | ✅ **Published** |
-| 02 | Opening the Box: Every File Explained | `ep02-end` | Code built, script written |
+| 02 | Opening the Box: Every File Explained | `ep02-end` | ✅ **Published** |
 | 03 | The Page Model & the Tree | `ep03-end` | Not started |
 
 ### Act 2 — Building the studio site
@@ -185,14 +185,16 @@ ran, or it will lie on camera.
 - Ep 0a **published**: https://www.youtube.com/watch?v=ck4T3lnkhqs
 - Ep 0b **published**: https://www.youtube.com/watch?v=7AtlyySq4l4
 - Ep 1 **published**: https://www.youtube.com/watch?v=X7FgE9j1XLY
+- Ep 2 **published**: https://www.youtube.com/watch?v=FoElBiKp_fI
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 2 — render from the existing script; no code changes, so the tree is identical to ep 1
-2. Ep 3 onward — build the code first, then script, then render
+1. Ep 3 — the first episode that changes code: build and verify in `site/` first,
+   then script, then render. First meaningful `ep03-end` diff for viewers.
+2. Ep 4 onward — same loop
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then
 real captured output appears. Every code episode from here uses it.

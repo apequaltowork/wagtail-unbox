@@ -19,6 +19,7 @@ tags, chapters, thumbnail, pinned comment.
 | 0a | What This Series Is (and Who It's For) | https://www.youtube.com/watch?v=ck4T3lnkhqs |
 | 0b | Setting Up Your Machine | https://www.youtube.com/watch?v=7AtlyySq4l4 |
 | 01 | What Wagtail Actually Is | https://www.youtube.com/watch?v=X7FgE9j1XLY |
+| 02 | Opening the Box: Every File Explained | https://www.youtube.com/watch?v=FoElBiKp_fI |
 
 ## Titles
 
