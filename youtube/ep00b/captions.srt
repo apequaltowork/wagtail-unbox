@@ -1,0 +1,319 @@
+1
+00:00:00,350 --> 00:00:03,550
+Setting up your machine.
+
+2
+00:00:04,350 --> 00:00:05,999
+Before anything else.
+
+3
+00:00:05,999 --> 00:00:09,532
+If you already have Python three twelve, git,
+
+4
+00:00:09,532 --> 00:00:14,399
+and you know what a virtual environment is, skip this episode.
+
+5
+00:00:14,399 --> 00:00:16,519
+Go straight to episode one.
+
+6
+00:00:16,519 --> 00:00:18,168
+I will see you there.
+
+7
+00:00:18,968 --> 00:00:21,596
+For everyone else, this is short.
+
+8
+00:00:21,596 --> 00:00:23,984
+We are installing four things.
+
+9
+00:00:23,984 --> 00:00:30,434
+Python three twelve, an editor, git, and we will get comfortable with a terminal.
+
+10
+00:00:31,234 --> 00:00:35,375
+And just as importantly, what we are not installing.
+
+11
+00:00:35,375 --> 00:00:36,888
+No database server.
+
+12
+00:00:36,888 --> 00:00:42,382
+Episodes one to twelve use SQLite, which already ships inside Python.
+
+13
+00:00:42,382 --> 00:00:47,319
+Postgres turns up in episode thirteen and we install it there.
+
+14
+00:00:47,319 --> 00:00:48,275
+And no Node.
+
+15
+00:00:48,275 --> 00:00:53,212
+There is no front end build step in this series, at any point.
+
+16
+00:00:54,012 --> 00:00:56,922
+Step one, Python three point twelve.
+
+17
+00:00:56,922 --> 00:01:00,640
+On Windows, use the installer from python.org.
+
+18
+00:01:00,640 --> 00:01:02,014
+On Mac, homebrew.
+
+19
+00:01:02,014 --> 00:01:08,642
+On Debian or Ubuntu, apt &mdash; and note that the venv package is separate there.
+
+20
+00:01:08,642 --> 00:01:15,270
+If you miss it, creating a virtual environment fails later with a confusing error.
+
+21
+00:01:16,070 --> 00:01:22,323
+Windows users, this one box causes more failed setups than everything else combined.
+
+22
+00:01:22,323 --> 00:01:27,237
+On the first screen of the installer, tick add python.exe to path.
+
+23
+00:01:27,237 --> 00:01:32,894
+If you already installed without it, run the installer again, choose modify,
+
+24
+00:01:32,894 --> 00:01:34,160
+and tick it then.
+
+25
+00:01:34,960 --> 00:01:36,319
+Check it worked.
+
+26
+00:01:36,319 --> 00:01:39,887
+On Windows, p y space minus minus version.
+
+27
+00:01:39,887 --> 00:01:44,219
+On Mac and Linux, python three minus minus version.
+
+28
+00:01:44,219 --> 00:01:47,447
+You want three point twelve something.
+
+29
+00:01:47,447 --> 00:01:52,714
+If it says command not found on Windows, that is the path box.
+
+30
+00:01:53,514 --> 00:01:55,247
+Step two, an editor.
+
+31
+00:01:55,247 --> 00:02:02,266
+I use VS Code with the Python extension, and that is what you will see on screen.
+
+32
+00:02:02,266 --> 00:02:04,085
+But any editor works.
+
+33
+00:02:04,085 --> 00:02:06,252
+PyCharm, Neovim, Sublime.
+
+34
+00:02:06,252 --> 00:02:09,371
+Do not spend an afternoon on themes.
+
+35
+00:02:09,371 --> 00:02:11,364
+Install it and move on.
+
+36
+00:02:12,164 --> 00:02:13,482
+Step three, git.
+
+37
+00:02:13,482 --> 00:02:19,084
+Windows, use the installer from git-scm.com and accept the defaults.
+
+38
+00:02:19,084 --> 00:02:21,309
+Mac and Linux, one command.
+
+39
+00:02:21,309 --> 00:02:23,451
+Then tell git who you are.
+
+40
+00:02:23,451 --> 00:02:30,206
+You need git because every episode of this series ends on a tag you can check out.
+
+41
+00:02:31,006 --> 00:02:34,127
+Step four, and this is the one that matters.
+
+42
+00:02:34,127 --> 00:02:39,305
+A virtual environment is just a folder that holds one project's packages.
+
+43
+00:02:39,305 --> 00:02:44,766
+Without it, every Python project on your machine shares one set of libraries.
+
+44
+00:02:44,766 --> 00:02:49,305
+Two projects that need different versions of Wagtail will fight,
+
+45
+00:02:49,305 --> 00:02:51,788
+and you will lose an evening to it.
+
+46
+00:02:51,788 --> 00:02:53,632
+With one, they never meet.
+
+47
+00:02:54,432 --> 00:02:55,507
+Two commands.
+
+48
+00:02:55,507 --> 00:02:57,657
+Make it, then activate it.
+
+49
+00:02:57,657 --> 00:03:02,618
+On Mac and Linux the activate command is slightly different,
+
+50
+00:03:02,618 --> 00:03:04,602
+and it is on screen now.
+
+51
+00:03:05,402 --> 00:03:07,072
+Look at your prompt.
+
+52
+00:03:07,072 --> 00:03:10,161
+It now starts with .venv in brackets.
+
+53
+00:03:10,161 --> 00:03:12,832
+That prefix is the whole lesson.
+
+54
+00:03:12,832 --> 00:03:16,172
+It means you are inside the environment.
+
+55
+00:03:16,972 --> 00:03:18,250
+Here is the trap.
+
+56
+00:03:18,250 --> 00:03:23,588
+Opening a new terminal window starts you outside the environment again.
+
+57
+00:03:23,588 --> 00:03:26,520
+You have to activate every single time.
+
+58
+00:03:26,520 --> 00:03:31,030
+This is the number one reason that, three episodes from now,
+
+59
+00:03:31,030 --> 00:03:33,962
+a command suddenly cannot find Wagtail.
+
+60
+00:03:33,962 --> 00:03:35,015
+Nothing broke.
+
+61
+00:03:35,015 --> 00:03:37,270
+You are just outside the venv.
+
+62
+00:03:38,070 --> 00:03:39,843
+One more Windows thing.
+
+63
+00:03:39,843 --> 00:03:45,086
+If activate fails saying running scripts is disabled on this system,
+
+64
+00:03:45,086 --> 00:03:48,016
+that is PowerShell's execution policy.
+
+65
+00:03:48,016 --> 00:03:52,102
+Run the command on screen, answer yes, and try again.
+
+66
+00:03:52,102 --> 00:03:55,032
+It only affects your own user account.
+
+67
+00:03:55,832 --> 00:03:59,453
+Let us check everyone is in the same place.
+
+68
+00:03:59,453 --> 00:04:00,717
+Three commands.
+
+69
+00:04:00,717 --> 00:04:03,243
+Python, git, and venv support.
+
+70
+00:04:03,243 --> 00:04:07,370
+If all three run without an error, you are ready.
+
+71
+00:04:08,170 --> 00:04:11,295
+Notice we have not installed Wagtail at all.
+
+72
+00:04:11,295 --> 00:04:12,645
+That is deliberate.
+
+73
+00:04:12,645 --> 00:04:15,415
+It is the first command of episode one.
+
+74
+00:04:15,415 --> 00:04:21,381
+Delete the practice folder, because the real project starts from an empty directory.
+
+75
+00:04:21,381 --> 00:04:27,063
+And if anything failed, leave a comment with your operating system and the exact
+
+76
+00:04:27,063 --> 00:04:27,844
+error text.
+
+77
+00:04:28,644 --> 00:04:35,599
+Next episode, we install Wagtail, create a project, and log into a real CMS admin.
+
+78
+00:04:35,599 --> 00:04:40,518
+And then we stop, and read every single file it generated.
+
+79
+00:04:41,318 --> 00:04:44,108
+That is your starting line.
+
+80
+00:04:44,108 --> 00:04:47,518
+Next episode, we install Wagtail.
