@@ -17,6 +17,7 @@ tags, chapters, thumbnail, pinned comment.
 | Ep | Title | URL |
 |---|---|---|
 | 0a | What This Series Is (and Who It's For) | https://www.youtube.com/watch?v=ck4T3lnkhqs |
+| 0b | Setting Up Your Machine | https://www.youtube.com/watch?v=7AtlyySq4l4 |
 
 ## Titles
 

@@ -32,7 +32,7 @@ code, not just copy it.
 | **Wagtail** | 7.4.3 (pinned) | 8.0 exists; 7.4 has wider package compatibility and ages slower |
 | **Django** | 6.1.1 (pinned) | Wagtail 7.4 declares only a minimum of 5.2 with no upper limit, so unpinned installs drift |
 | **Python** | 3.12.10 | What's on the recording machine |
-| **Episode length** | 15–25 min, one concept each | Best retention for tutorial content |
+| **Episode length** | One concept each. Rendered slide episodes land near 5 min; code episodes will run longer | Rendered slides are far denser than a live screencast — no typing, no waiting on installers |
 | **Database** | SQLite through ep 12, Postgres at ep 13 | Nothing to install = nobody quits at setup |
 | **Front-end** | Plain CSS, by hand. No Node, React or Tailwind | Keeps episodes about Wagtail, not a toolchain |
 | **Narration** | `en-US-SteffanNeural` via edge-tts | Chosen from a 15-voice audition |
@@ -56,7 +56,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 | # | Title | Status |
 |---|---|---|
 | 0a | What This Series Is (and Who It's For) | ✅ **Published** |
-| 0b | Setting Up Your Machine | Script + metadata written |
+| 0b | Setting Up Your Machine | ✅ **Published** |
 
 ### Act 1 — Unboxing
 | # | Title | Tag | Status |
@@ -165,7 +165,7 @@ sends narration text to Microsoft to synthesise, so it needs a network connectio
 
 1. **Build the code** in `site/`, verified running
 2. **Write `commands.md`** by replaying exactly what was typed
-3. **Write `script.md`** — beats keyed to on-screen actions, timings summing to 15–25 min
+3. **Write `script.md`** — beats keyed to on-screen actions
 4. **Write `scenes.py`** — the slides and narration
 5. **Render** — `python video/build.py epNN`
 6. **Write `README.md`** — title, description, tags, chapters *from the real render*
@@ -183,15 +183,16 @@ ran, or it will lie on camera.
 - Repo live, 14+ commits, tags `ep01-end` and `ep02-end` pushed
 - Wagtail 7.4.3 project built and verified; admin login confirmed
 - Ep 0a **published**: https://www.youtube.com/watch?v=ck4T3lnkhqs
+- Ep 0b **published**: https://www.youtube.com/watch?v=7AtlyySq4l4
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 0b scene spec and render (mostly slides — same shape as 0a)
-2. Ep 1 — the real test, needs a terminal on screen. Either animate the terminal from the
+1. Ep 1 — the real test, needs a terminal on screen. Either animate the terminal from the
    real captured output, or leave marked gaps for a screencast
+2. Ep 2 — render from the existing script
 3. Ep 3 onward — code first, then script
 
 **Open questions**
