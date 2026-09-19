@@ -10,6 +10,7 @@ tags, chapters, thumbnail, pinned comment.
 | [ep00b.md](ep00b.md) | Ep 0b — Setting Up Your Machine |
 | [ep01.md](ep01.md) | Ep 1 — What Wagtail Actually Is |
 | [ep02.md](ep02.md) | Ep 2 — Opening the Box: Every File Explained |
+| [ep03/](ep03/README.md) | Ep 3 — The Page Model & the Tree |
 | [channel.md](channel.md) | Channel-level settings that apply to every upload |
 
 ## Published

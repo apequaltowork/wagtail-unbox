@@ -63,7 +63,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 |---|---|---|---|
 | 01 | What Wagtail Actually Is | `ep01-end` | ✅ **Published** |
 | 02 | Opening the Box: Every File Explained | `ep02-end` | ✅ **Published** |
-| 03 | The Page Model & the Tree | `ep03-end` | Not started |
+| 03 | The Page Model & the Tree | `ep03-end` | Built, rendered, ready to upload |
 
 ### Act 2 — Building the studio site
 | # | Title | Covers |
@@ -192,9 +192,8 @@ ran, or it will lie on camera.
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 3 — the first episode that changes code: build and verify in `site/` first,
-   then script, then render. First meaningful `ep03-end` diff for viewers.
-2. Ep 4 onward — same loop
+1. Ep 4 — templates and static files: replace the welcome page, style StandardPage
+2. Ep 5 onward — same loop: build and verify in `site/`, then script, then render
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then
 real captured output appears. Every code episode from here uses it.
