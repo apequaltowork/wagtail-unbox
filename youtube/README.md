@@ -6,10 +6,11 @@ tags, chapters, thumbnail, pinned comment.
 | File | Covers |
 |---|---|
 | [playlist.md](playlist.md) | Playlist title + description, and playlist settings |
-| [ep00a.md](ep00a.md) | Ep 0a — What This Series Is (and Who It's For) |
-| [ep00b.md](ep00b.md) | Ep 0b — Setting Up Your Machine |
-| [ep01.md](ep01.md) | Ep 1 — What Wagtail Actually Is |
-| [ep02.md](ep02.md) | Ep 2 — Opening the Box: Every File Explained |
+| [ep00a/](ep00a/README.md) | Ep 0a — What This Series Is (and Who It's For) |
+| [ep00b/](ep00b/README.md) | Ep 0b — Setting Up Your Machine |
+| [ep01/](ep01/README.md) | Ep 1 — What Wagtail Actually Is |
+| [ep02/](ep02/README.md) | Ep 2 — Opening the Box: Every File Explained |
+| [ep03/](ep03/README.md) | Ep 3 — The Page Model & the Tree |
 | [channel.md](channel.md) | Channel-level settings that apply to every upload |
 
 ## Published
@@ -20,6 +21,7 @@ tags, chapters, thumbnail, pinned comment.
 | 0b | Setting Up Your Machine | https://www.youtube.com/watch?v=7AtlyySq4l4 |
 | 01 | What Wagtail Actually Is | https://www.youtube.com/watch?v=X7FgE9j1XLY |
 | 02 | Opening the Box: Every File Explained | https://www.youtube.com/watch?v=FoElBiKp_fI |
+| 03 | The Page Model & the Tree | https://www.youtube.com/watch?v=1Oxev2holT4 |
 
 ## Titles
 
