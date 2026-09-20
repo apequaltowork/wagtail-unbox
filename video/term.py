@@ -48,13 +48,21 @@ class Cmd:
     # Output lines matching any of these render in teal rather than grey --
     # for the one line in the output that the narration is pointing at.
     highlight: list[str] = field(default_factory=list)
+    # Output lines matching any of these render red -- for tracebacks and
+    # failures, where teal would read as "this went well".
+    error: list[str] = field(default_factory=list)
 
 
-def _out_html(out: str, highlight: list[str]) -> str:
+def _out_html(out: str, highlight: list[str], error: list[str] = ()) -> str:
     lines = []
     for raw in out.split("\n"):
         esc = html.escape(raw)
-        cls = "hl-out" if any(h in raw for h in highlight) else "o"
+        if any(e in raw for e in error):
+            cls = "err-out"
+        elif any(h in raw for h in highlight):
+            cls = "hl-out"
+        else:
+            cls = "o"
         lines.append(f'<span class="{cls}">{esc}</span>')
     return "\n".join(lines)
 
@@ -93,7 +101,7 @@ def terminal_frames(bar: str, steps: list[Cmd]) -> list[str]:
         history += f"{line_prefix}{typed}\n"
 
         if cmd.out:
-            history += _out_html(cmd.out, cmd.highlight) + "\n"
+            history += _out_html(cmd.out, cmd.highlight, cmd.error) + "\n"
             frames.extend([_screen(bar, history, "")] * PAUSE_AFTER_OUT)
         history += "\n"
 

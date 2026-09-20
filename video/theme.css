@@ -187,6 +187,7 @@ pre.code .bad { color: var(--red); }
 .term-big { font-size: 32px; line-height: 1.5; }
 .term-big .body { min-height: 560px; }
 .term .hl-out { color: var(--teal); }
+.term .err-out { color: var(--red); }
 /* Solid block cursor; it reads as "typing" even in a single frame. */
 .term .cur {
   background: var(--teal);

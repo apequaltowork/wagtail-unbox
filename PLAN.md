@@ -69,7 +69,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 | # | Title | Covers |
 |---|---|---|
 | 04 | Templates & Static Files | ✅ **Published** — base.html, pageurl/slugurl, plain CSS |
-| 05 | StreamField, Properly | Block types, `StructBlock`, `ListBlock`, block templates |
+| 05 | StreamField, Properly | ✅ **Published** — `StructBlock`, `ListBlock`, block templates, and the JSON_VALID migration |
 | 06 | Images & Documents | Renditions, focal points, `ImageChooserBlock` |
 | 07 | Blog: Parent & Child Pages | `BlogIndexPage`, `subpage_types`, pagination |
 | 08 | Snippets & Reusable Content | `register_snippet`, `SnippetChooserBlock` |
@@ -188,14 +188,15 @@ ran, or it will lie on camera.
 - Ep 2 **published**: https://www.youtube.com/watch?v=FoElBiKp_fI
 - Ep 3 **published**: https://www.youtube.com/watch?v=1Oxev2holT4
 - Ep 4 **published**: https://www.youtube.com/watch?v=e-FeE6O9AhM
+- Ep 5 **published**: https://www.youtube.com/watch?v=8_wrJLU57Qw
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 5 — StreamField: replace the RichTextField body with real content blocks
-2. Ep 6 onward — same loop: build and verify in `site/`, then script, then render
+1. Ep 6 — Images & Documents: the image model, renditions, `ImageChooserBlock`
+2. Ep 7 onward — same loop: build and verify in `site/`, then script, then render
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then
 real captured output appears. Every code episode from here uses it.
@@ -226,3 +227,12 @@ Each of these cost real time and is worth not rediscovering.
   push. SSH was the way through.
 - **PowerShell variables are case-insensitive** — `$S` and `$s` are the same variable.
 - **Chrome headless needs Windows-style absolute paths** for `--screenshot`.
+- **Chrome headless caches too.** Re-screenshotting a page after a CSS edit returns the
+  old picture, byte for byte, unless you pass a throwaway `--user-data-dir`.
+- **ffmpeg 9's concat demuxer drops a long `duration` entry** when it names the same file
+  as the entry before it. That is how an animated scene ends up playing its animation and
+  then going black for the rest of the narration. Hold a frame by repeating it one frame
+  at a time instead. Found in ep 5; it had been latent since ep 2 and only showed up once
+  a terminal scene had narration much longer than its typing.
+- **Wagtail 7 wraps every StreamField block** in `w-block-NAME block-NAME`. Adding the same
+  class in your own block template applies the styling twice.

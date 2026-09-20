@@ -1,0 +1,9 @@
+<h2>{{ value.heading }}</h2>
+<ul class="service-grid">
+    {% for service in value.services %}
+        <li>
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,523 @@
+1
+00:00:00,350 --> 00:00:03,550
+StreamField, properly.
+
+2
+00:00:04,350 --> 00:00:08,804
+Right now the body of every page is a single rich text field.
+
+3
+00:00:08,804 --> 00:00:09,388
+One box.
+
+4
+00:00:09,388 --> 00:00:13,258
+The editor can put anything they like in it, and you,
+
+5
+00:00:13,258 --> 00:00:15,668
+the person who designed the site,
+
+6
+00:00:15,668 --> 00:00:19,392
+have no say at all in what comes out the other end.
+
+7
+00:00:20,192 --> 00:00:21,881
+So what is StreamField.
+
+8
+00:00:21,881 --> 00:00:24,597
+It is not a fancier rich text editor.
+
+9
+00:00:24,597 --> 00:00:29,002
+It is a JSON column holding an ordered list of typed blocks.
+
+10
+00:00:29,002 --> 00:00:32,085
+Hold on to the JSON part of that sentence,
+
+11
+00:00:32,085 --> 00:00:37,298
+because it explains an error we are going to hit in about four minutes.
+
+12
+00:00:38,098 --> 00:00:42,715
+There are four kinds of block and they nest inside each other.
+
+13
+00:00:42,715 --> 00:00:44,650
+Primitives hold one value.
+
+14
+00:00:44,650 --> 00:00:48,895
+A struct block is a record: these fields belong together.
+
+15
+00:00:48,895 --> 00:00:52,767
+A list block is a repeat: several of the same thing.
+
+16
+00:00:52,767 --> 00:00:57,532
+And a stream block is a choice: pick any of these, in any order.
+
+17
+00:00:57,532 --> 00:01:00,436
+That last one is the body field itself.
+
+18
+00:01:01,236 --> 00:01:04,532
+These two are the ones everybody confuses.
+
+19
+00:01:04,532 --> 00:01:10,576
+A service has a name and a description, and those two always travel together,
+
+20
+00:01:10,576 --> 00:01:12,616
+so that is a struct block.
+
+21
+00:01:12,616 --> 00:01:17,640
+A studio offers several services, so we wrap it in a list block.
+
+22
+00:01:17,640 --> 00:01:19,052
+Struct, then list.
+
+23
+00:01:19,052 --> 00:01:20,622
+Record, then repeat.
+
+24
+00:01:21,422 --> 00:01:23,467
+Here is the first real block.
+
+25
+00:01:23,467 --> 00:01:26,077
+A quote, and an optional attribution.
+
+26
+00:01:26,077 --> 00:01:28,686
+The fields are constructor arguments.
+
+27
+00:01:28,686 --> 00:01:34,328
+Everything in Meta is about presentation: the icon that shows in the block menu,
+
+28
+00:01:34,328 --> 00:01:40,040
+the label the editor reads, and the template it renders through on the front end.
+
+29
+00:01:40,840 --> 00:01:43,905
+And this is the pattern worth remembering.
+
+30
+00:01:43,905 --> 00:01:46,750
+A struct block containing a list block.
+
+31
+00:01:46,750 --> 00:01:52,296
+A heading that appears once, and then between one and six services under it.
+
+32
+00:01:52,296 --> 00:01:56,674
+Min num and max num are the guard rails you hand the client.
+
+33
+00:01:57,474 --> 00:02:00,290
+And the top level block collects them.
+
+34
+00:02:00,290 --> 00:02:03,996
+Five things an editor is allowed to add to a page.
+
+35
+00:02:03,996 --> 00:02:06,590
+Notice rich text has not gone away.
+
+36
+00:02:06,590 --> 00:02:12,297
+It is still here, it is just one block among several now instead of being the
+
+37
+00:02:12,297 --> 00:02:13,260
+entire field.
+
+38
+00:02:14,060 --> 00:02:17,941
+The model change is two lines, on both page types.
+
+39
+00:02:17,941 --> 00:02:22,832
+And the content panel underneath does not change one character.
+
+40
+00:02:22,832 --> 00:02:26,558
+It is still just a field panel pointing at body.
+
+41
+00:02:27,358 --> 00:02:29,633
+One warning before we migrate.
+
+42
+00:02:29,633 --> 00:02:35,701
+Nearly every StreamField tutorial you will find tells you to pass use json field
+
+43
+00:02:35,701 --> 00:02:36,611
+equals true.
+
+44
+00:02:36,611 --> 00:02:39,266
+That was needed before Wagtail six.
+
+45
+00:02:39,266 --> 00:02:45,334
+In seven point four the parameter is still accepted and, in Wagtail's own words,
+
+46
+00:02:45,334 --> 00:02:45,940
+ignored.
+
+47
+00:02:45,940 --> 00:02:48,064
+Don't type it into new code.
+
+48
+00:02:48,864 --> 00:02:49,205
+So.
+
+49
+00:02:49,205 --> 00:02:53,973
+Make migrations, migrate, and it blows up.
+
+50
+00:02:53,973 --> 00:02:55,789
+Integrity error.
+
+51
+00:02:55,789 --> 00:02:58,514
+Check constraint failed.
+
+52
+00:02:58,514 --> 00:03:00,330
+JSON valid body.
+
+53
+00:03:01,130 --> 00:03:05,308
+And nothing in that message says the word StreamField.
+
+54
+00:03:05,308 --> 00:03:07,011
+Here is what it means.
+
+55
+00:03:07,011 --> 00:03:11,808
+Back in episode three you typed some text into the About page,
+
+56
+00:03:11,808 --> 00:03:14,981
+so that column holds a paragraph of HTML.
+
+57
+00:03:14,981 --> 00:03:19,623
+The new column is JSON, and a paragraph of HTML is not JSON.
+
+58
+00:03:19,623 --> 00:03:23,492
+Every single person following along will hit this.
+
+59
+00:03:24,292 --> 00:03:27,251
+And before you panic: nothing is broken.
+
+60
+00:03:27,251 --> 00:03:30,580
+Django runs a migration inside a transaction,
+
+61
+00:03:30,580 --> 00:03:34,205
+so when it failed it rolled the whole thing back.
+
+62
+00:03:34,205 --> 00:03:37,756
+Show migrations still lists 0004 as not applied,
+
+63
+00:03:37,756 --> 00:03:40,790
+and your content is exactly where it was.
+
+64
+00:03:40,790 --> 00:03:46,486
+On Postgres you get a different message for the same cause, and the same fix.
+
+65
+00:03:47,286 --> 00:03:51,795
+The fix is to hand edit the migration Django just generated,
+
+66
+00:03:51,795 --> 00:03:55,703
+and convert the data before the column changes type.
+
+67
+00:03:55,703 --> 00:03:57,958
+The order is the entire trick.
+
+68
+00:03:57,958 --> 00:04:02,316
+That run python runs while the column is still plain text,
+
+69
+00:04:02,316 --> 00:04:06,600
+so it can read the HTML out and write valid JSON back in.
+
+70
+00:04:07,400 --> 00:04:08,579
+And this is it.
+
+71
+00:04:08,579 --> 00:04:14,238
+Take whatever HTML is in the field, wrap it as a single paragraph block,
+
+72
+00:04:14,238 --> 00:04:16,281
+and write it back as JSON.
+
+73
+00:04:16,281 --> 00:04:20,997
+Note the shape of a block: a type, a value, and a unique id.
+
+74
+00:04:20,997 --> 00:04:26,263
+That id matters, it is how Wagtail tracks a block across revisions.
+
+75
+00:04:26,263 --> 00:04:28,699
+Write the reverse function too.
+
+76
+00:04:28,699 --> 00:04:32,786
+It is six more lines and it means you can undo this.
+
+77
+00:04:33,586 --> 00:04:35,952
+Run it again, and it applies.
+
+78
+00:04:35,952 --> 00:04:41,908
+And the About page's paragraph is still there, now living inside a block.
+
+79
+00:04:42,708 --> 00:04:47,461
+While we are in there, the rest of that file looks horrifying.
+
+80
+00:04:47,461 --> 00:04:51,217
+That is Wagtail seven's compact migration format.
+
+81
+00:04:51,217 --> 00:04:56,582
+Every block definition is written once and then referred to by number.
+
+82
+00:04:56,582 --> 00:04:59,572
+It is unreadable and it is meant to be.
+
+83
+00:04:59,572 --> 00:05:01,718
+Nobody hand edits that half.
+
+84
+00:05:01,718 --> 00:05:03,558
+We only touched the top.
+
+85
+00:05:04,358 --> 00:05:07,162
+The page templates get one line shorter.
+
+86
+00:05:07,162 --> 00:05:12,701
+The rich text filter goes, because StreamField renders every block through that
+
+87
+00:05:12,701 --> 00:05:14,173
+block's own template.
+
+88
+00:05:14,173 --> 00:05:17,048
+There is nothing left for a filter to do.
+
+89
+00:05:17,848 --> 00:05:20,333
+And a block template is tiny.
+
+90
+00:05:20,333 --> 00:05:24,188
+Inside one, the block is always called value,
+
+91
+00:05:24,188 --> 00:05:28,301
+and a struct block's fields hang off it by name.
+
+92
+00:05:28,301 --> 00:05:30,957
+value.quote, value.attribution.
+
+93
+00:05:30,957 --> 00:05:32,842
+That is the whole API.
+
+94
+00:05:33,642 --> 00:05:37,038
+And here is this episode's ten minute lesson.
+
+95
+00:05:37,038 --> 00:05:41,944
+My call to action rendered as a teal box inside another teal box,
+
+96
+00:05:41,944 --> 00:05:44,737
+twice the height it should have been.
+
+97
+00:05:44,737 --> 00:05:46,548
+And the CSS was correct.
+
+98
+00:05:47,348 --> 00:05:49,045
+Two elements matched.
+
+99
+00:05:49,045 --> 00:05:53,005
+Wagtail seven already wraps every block in a div,
+
+100
+00:05:53,005 --> 00:05:57,773
+and that div already carries a class named after the block.
+
+101
+00:05:57,773 --> 00:05:59,147
+Block dash c t a.
+
+102
+00:05:59,147 --> 00:06:05,774
+My template added a class with exactly the same name, so the styling landed twice.
+
+103
+00:06:06,574 --> 00:06:11,661
+So delete the wrapper class from your templates and style Wagtail's instead.
+
+104
+00:06:11,661 --> 00:06:16,881
+It is fewer lines, and every block you add later gets a wrapper class for free
+
+105
+00:06:16,881 --> 00:06:18,688
+without you doing anything.
+
+106
+00:06:19,488 --> 00:06:22,231
+And this is the payoff, in the admin.
+
+107
+00:06:22,231 --> 00:06:26,086
+One plus button opens a menu of exactly five things,
+
+108
+00:06:26,086 --> 00:06:29,126
+with the icons and labels we set in Meta.
+
+109
+00:06:29,126 --> 00:06:32,388
+Add them, drag them into any order you like.
+
+110
+00:06:32,388 --> 00:06:37,652
+The editor gets freedom, you keep control of what the page can contain.
+
+111
+00:06:37,652 --> 00:06:40,914
+That is the whole reason StreamField exists.
+
+112
+00:06:41,714 --> 00:06:44,781
+Two settings, same word, different jobs.
+
+113
+00:06:44,781 --> 00:06:51,146
+Block counts on the stream block limits how many of a block type the whole page may
+
+114
+00:06:51,146 --> 00:06:51,529
+have.
+
+115
+00:06:51,529 --> 00:06:56,667
+Max num on the list block limits how many items go inside one list.
+
+116
+00:06:56,667 --> 00:06:58,967
+One services section per page.
+
+117
+00:06:58,967 --> 00:07:00,884
+Up to six services in it.
+
+118
+00:07:01,684 --> 00:07:03,682
+And here is the home page.
+
+119
+00:07:03,682 --> 00:07:06,986
+A paragraph, a services grid, a pull quote,
+
+120
+00:07:06,986 --> 00:07:12,212
+and a call to action whose button link came out of the page chooser.
+
+121
+00:07:12,212 --> 00:07:16,438
+Four blocks, four templates, all ordered by the editor.
+
+122
+00:07:17,238 --> 00:07:18,725
+And the About page.
+
+123
+00:07:18,725 --> 00:07:23,266
+That first paragraph is the one we wrote in episode three,
+
+124
+00:07:23,266 --> 00:07:29,293
+carried across by the data migration, with a new heading block underneath it.
+
+125
+00:07:29,293 --> 00:07:30,624
+Nothing was lost.
+
+126
+00:07:31,424 --> 00:07:33,938
+Commit, and tag.
+
+127
+00:07:34,738 --> 00:07:37,622
+Next episode, images and documents.
+
+128
+00:07:37,622 --> 00:07:42,071
+Renditions, focal points, and the image chooser block,
+
+129
+00:07:42,071 --> 00:07:45,532
+which is the block everybody wanted today.
+
+130
+00:07:46,332 --> 00:07:52,187
+Next episode, images and documents.
+
+131
+00:07:52,187 --> 00:07:55,532
+Thanks for watching.

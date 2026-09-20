@@ -1,8 +1,10 @@
 from django.db import models
 
 from wagtail.admin.panels import FieldPanel
-from wagtail.fields import RichTextField
+from wagtail.fields import StreamField
 from wagtail.models import Page
+
+from home.blocks import BodyBlock
 
 
 class HomePage(Page):
@@ -11,7 +13,7 @@ class HomePage(Page):
         blank=True,
         help_text="One or two sentences shown under the page title.",
     )
-    body = RichTextField(blank=True)
+    body = StreamField(BodyBlock(), blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("intro"),
@@ -27,7 +29,7 @@ class StandardPage(Page):
         blank=True,
         help_text="One or two sentences shown under the page title.",
     )
-    body = RichTextField(blank=True)
+    body = StreamField(BodyBlock(), blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("intro"),

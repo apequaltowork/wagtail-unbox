@@ -10,7 +10,7 @@
         <p class="intro">{{ page.intro }}</p>
     {% endif %}
 
-    {{ page.body|richtext }}
+    {{ page.body }}
 
     <p><a class="back" href="{% pageurl page.get_parent %}">&larr; {{ page.get_parent.title }}</a></p>
 {% endblock content %}

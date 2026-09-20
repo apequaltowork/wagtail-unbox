@@ -240,8 +240,13 @@ def make_animated_video(frames: list[Path], seconds: float, dest: Path) -> Path:
     lines = []
     for f in frames:
         lines.append(f"file '{f.as_posix()}'\nduration {per:.5f}\n")
-    if tail > 0:
-        lines.append(f"file '{frames[-1].as_posix()}'\nduration {tail:.5f}\n")
+    # Hold the last frame by repeating it one frame at a time rather than with a
+    # single long `duration`. ffmpeg 9's concat demuxer silently drops that long
+    # entry when it names the same file as the one before it, which leaves the
+    # rest of the scene black -- the animation plays and then the picture dies
+    # while the narration keeps going.
+    for _ in range(int(round(tail * FPS))):
+        lines.append(f"file '{frames[-1].as_posix()}'\nduration {per:.5f}\n")
     # The concat demuxer ignores the final entry's duration, so repeat it.
     lines.append(f"file '{frames[-1].as_posix()}'\n")
     listing.write_text("".join(lines), encoding="utf-8")

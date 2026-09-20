@@ -25,3 +25,6 @@ Thumbs.db
 # Rendered video output (large, reproducible from scenes.py)
 youtube/*/out/
 video/out/
+
+# local tooling
+.claude/
