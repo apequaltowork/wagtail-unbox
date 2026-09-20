@@ -1,0 +1,351 @@
+1
+00:00:00,350 --> 00:00:03,550
+Templates, and static files.
+
+2
+00:00:04,350 --> 00:00:10,923
+Four episodes in, and the front of our site still shows Wagtail's welcome page.
+
+3
+00:00:10,923 --> 00:00:15,000
+A teal egg, and welcome to your new Wagtail site.
+
+4
+00:00:15,000 --> 00:00:16,248
+Today, it goes.
+
+5
+00:00:17,048 --> 00:00:23,278
+It lives in an include, and Wagtail tells you in a comment that it is disposable.
+
+6
+00:00:23,278 --> 00:00:28,431
+So we delete the include, the welcome template, and its stylesheet.
+
+7
+00:00:28,431 --> 00:00:29,738
+Three files gone.
+
+8
+00:00:30,538 --> 00:00:33,768
+Remember the rule from episode two.
+
+9
+00:00:33,768 --> 00:00:37,552
+Model name, lowercased, with underscores.
+
+10
+00:00:37,552 --> 00:00:43,828
+Home page becomes home_page.html, and you never wire it up anywhere.
+
+11
+00:00:43,828 --> 00:00:46,228
+Wagtail just looks for it.
+
+12
+00:00:47,028 --> 00:00:52,181
+And there are two places templates can live, both switched on in settings.
+
+13
+00:00:52,181 --> 00:00:57,404
+App dirs finds templates inside each app, which is where page templates go.
+
+14
+00:00:57,404 --> 00:01:01,583
+And the dirs setting points at the project templates folder,
+
+15
+00:01:01,583 --> 00:01:05,622
+which is where base.html lives, because every app uses it.
+
+16
+00:01:06,422 --> 00:01:07,653
+Open base.html.
+
+17
+00:01:07,653 --> 00:01:11,592
+The head that Wagtail generated is already good.
+
+18
+00:01:11,592 --> 00:01:15,120
+An SEO title with a fallback, the user bar,
+
+19
+00:01:15,120 --> 00:01:19,633
+and that preview panel fix we looked at in episode two.
+
+20
+00:01:19,633 --> 00:01:20,864
+Keep all of it.
+
+21
+00:01:20,864 --> 00:01:23,408
+We are only replacing the body.
+
+22
+00:01:24,208 --> 00:01:29,124
+A header, a main, and a footer, wrapped around the content block.
+
+23
+00:01:29,124 --> 00:01:31,015
+That is the whole layout.
+
+24
+00:01:31,015 --> 00:01:34,570
+Every page in the series inherits it from here.
+
+25
+00:01:35,370 --> 00:01:37,606
+Three tags do all the linking.
+
+26
+00:01:37,606 --> 00:01:41,705
+Page url takes a page object and gives you its address.
+
+27
+00:01:41,705 --> 00:01:44,164
+Slug url looks a page up by slug,
+
+28
+00:01:44,164 --> 00:01:50,201
+which is why the brand link keeps working even if somebody renames the home page.
+
+29
+00:01:50,201 --> 00:01:54,598
+And the rich text filter turns a rich text field into HTML.
+
+30
+00:01:54,598 --> 00:01:58,548
+All three need the wagtail core tags load at the top.
+
+31
+00:01:59,348 --> 00:02:03,855
+And this is where last episode's warning pays off.
+
+32
+00:02:03,855 --> 00:02:07,011
+Never build a link out of url path.
+
+33
+00:02:07,011 --> 00:02:10,617
+It gives you/home/about, which is a 404.
+
+34
+00:02:10,617 --> 00:02:13,862
+Page url gives you the real address.
+
+35
+00:02:14,662 --> 00:02:18,994
+And here is the page tree finally doing something useful.
+
+36
+00:02:18,994 --> 00:02:21,807
+The home page lists its own children.
+
+37
+00:02:21,807 --> 00:02:25,075
+It does not know that an About page exists.
+
+38
+00:02:25,075 --> 00:02:26,747
+It just asks the tree.
+
+39
+00:02:26,747 --> 00:02:32,296
+Dot live means published pages only, so drafts stay hidden from visitors.
+
+40
+00:02:33,096 --> 00:02:34,603
+Now the styling.
+
+41
+00:02:34,603 --> 00:02:40,539
+Wagtail generates a stylesheet at studio/static/css/studio.css,
+
+42
+00:02:40,539 --> 00:02:45,626
+links it in base.html, and leaves it completely empty.
+
+43
+00:02:45,626 --> 00:02:46,663
+Zero bytes.
+
+44
+00:02:46,663 --> 00:02:49,395
+We fill it in with plain CSS.
+
+45
+00:02:49,395 --> 00:02:56,178
+No build step, no framework, not in this episode and not in any of them.
+
+46
+00:02:56,978 --> 00:03:01,630
+The static tag turns a path inside your static folder into a URL,
+
+47
+00:03:01,630 --> 00:03:05,853
+using the static files dirs setting we read in episode two.
+
+48
+00:03:05,853 --> 00:03:08,788
+In development the server just serves it.
+
+49
+00:03:08,788 --> 00:03:14,156
+In production there is a collect static step, and that is episode thirteen.
+
+50
+00:03:14,956 --> 00:03:21,472
+And now the thing that will cost you ten minutes, because it cost me ten minutes.
+
+51
+00:03:21,472 --> 00:03:22,920
+You write the CSS.
+
+52
+00:03:22,920 --> 00:03:23,805
+You reload.
+
+53
+00:03:23,805 --> 00:03:27,184
+And the page is still completely unstyled.
+
+54
+00:03:27,184 --> 00:03:29,758
+Nothing is wrong with your code.
+
+55
+00:03:30,558 --> 00:03:31,914
+Here is the proof.
+
+56
+00:03:31,914 --> 00:03:37,035
+The stylesheet is attached to the page, but it has zero rules in it.
+
+57
+00:03:37,035 --> 00:03:43,135
+Meanwhile fetching the same URL returns two thousand bytes of perfectly good CSS.
+
+58
+00:03:43,135 --> 00:03:44,566
+The server is fine.
+
+59
+00:03:44,566 --> 00:03:48,934
+Your browser cached that file back when it was zero bytes,
+
+60
+00:03:48,934 --> 00:03:51,720
+and it is still using the empty copy.
+
+61
+00:03:52,520 --> 00:03:54,405
+The fix is a hard reload.
+
+62
+00:03:54,405 --> 00:03:58,553
+Control F five on Windows, or command shift R on a Mac.
+
+63
+00:03:58,553 --> 00:04:02,324
+Every single person following along will hit this,
+
+64
+00:04:02,324 --> 00:04:08,584
+because the file ships empty and you loaded the site before you wrote anything into
+
+65
+00:04:08,584 --> 00:04:08,810
+it.
+
+66
+00:04:09,610 --> 00:04:10,930
+And there it is.
+
+67
+00:04:10,930 --> 00:04:14,890
+A header, a title, the intro from episode three,
+
+68
+00:04:14,890 --> 00:04:19,840
+a list of child pages generated from the tree, and a footer.
+
+69
+00:04:19,840 --> 00:04:21,820
+That is our studio site.
+
+70
+00:04:22,620 --> 00:04:25,641
+The About page gets the same layout for free,
+
+71
+00:04:25,641 --> 00:04:28,460
+because it extends the same base template.
+
+72
+00:04:28,460 --> 00:04:31,749
+And that back link is built from page.get_parent,
+
+73
+00:04:31,749 --> 00:04:36,246
+so it always points at wherever the page actually sits in the tree.
+
+74
+00:04:37,046 --> 00:04:40,808
+And one media query makes it work on a phone.
+
+75
+00:04:40,808 --> 00:04:46,324
+At 375 pixels the heading drops from two point six rem to two rem.
+
+76
+00:04:46,324 --> 00:04:50,504
+That is the entire responsive story for this site.
+
+77
+00:04:51,304 --> 00:04:52,563
+One last thing.
+
+78
+00:04:52,563 --> 00:04:57,765
+If you try a bad URL you still get Django's yellow debug page.
+
+79
+00:04:57,765 --> 00:05:01,541
+The 404 template exists and extends our base,
+
+80
+00:05:01,541 --> 00:05:05,821
+but Django only uses it when debug is switched off.
+
+81
+00:05:05,821 --> 00:05:08,842
+That is episode thirteen, not a bug.
+
+82
+00:05:09,642 --> 00:05:12,156
+Commit, and tag.
+
+83
+00:05:12,956 --> 00:05:15,317
+Our pages look like a site now,
+
+84
+00:05:15,317 --> 00:05:19,430
+but the body field is still one big blob of rich text.
+
+85
+00:05:19,430 --> 00:05:24,229
+Next episode, StreamField replaces it with real content blocks.
+
+86
+00:05:24,229 --> 00:05:28,190
+That is the episode most people come to Wagtail for.
+
+87
+00:05:28,990 --> 00:05:34,190
+Next episode, StreamField.
+
+88
+00:05:34,190 --> 00:05:38,190
+Thanks for watching.

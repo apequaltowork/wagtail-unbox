@@ -11,6 +11,7 @@ tags, chapters, thumbnail, pinned comment.
 | [ep01/](ep01/README.md) | Ep 1 — What Wagtail Actually Is |
 | [ep02/](ep02/README.md) | Ep 2 — Opening the Box: Every File Explained |
 | [ep03/](ep03/README.md) | Ep 3 — The Page Model & the Tree |
+| [ep04/](ep04/README.md) | Ep 4 — Templates & Static Files |
 | [channel.md](channel.md) | Channel-level settings that apply to every upload |
 
 ## Published
@@ -22,6 +23,7 @@ tags, chapters, thumbnail, pinned comment.
 | 01 | What Wagtail Actually Is | https://www.youtube.com/watch?v=X7FgE9j1XLY |
 | 02 | Opening the Box: Every File Explained | https://www.youtube.com/watch?v=FoElBiKp_fI |
 | 03 | The Page Model & the Tree | https://www.youtube.com/watch?v=1Oxev2holT4 |
+| 04 | Templates & Static Files | https://www.youtube.com/watch?v=e-FeE6O9AhM |
 
 ## Titles
 

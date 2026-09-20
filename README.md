@@ -48,7 +48,7 @@ Site: http://127.0.0.1:8000 · Admin: http://127.0.0.1:8000/admin/
 | 01 | [What Wagtail Actually Is](https://www.youtube.com/watch?v=X7FgE9j1XLY) | `ep01-end` |
 | 02 | [Opening the Box: Every File Explained](https://www.youtube.com/watch?v=FoElBiKp_fI) | `ep02-end` |
 | 03 | [The Page Model & the Tree](https://www.youtube.com/watch?v=1Oxev2holT4) | `ep03-end` |
-| 04 | Templates & Static Files | `ep04-end` |
+| 04 | [Templates & Static Files](https://www.youtube.com/watch?v=e-FeE6O9AhM) | `ep04-end` |
 | 05 | StreamField, Properly | `ep05-end` |
 | 06 | Images & Documents | `ep06-end` |
 | 07 | Blog: Parent & Child Pages | `ep07-end` |

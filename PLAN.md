@@ -68,7 +68,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 ### Act 2 — Building the studio site
 | # | Title | Covers |
 |---|---|---|
-| 04 | Templates & Static Files | Template resolution, `{% image %}`, base template, CSS |
+| 04 | Templates & Static Files | ✅ **Published** — base.html, pageurl/slugurl, plain CSS |
 | 05 | StreamField, Properly | Block types, `StructBlock`, `ListBlock`, block templates |
 | 06 | Images & Documents | Renditions, focal points, `ImageChooserBlock` |
 | 07 | Blog: Parent & Child Pages | `BlogIndexPage`, `subpage_types`, pagination |
@@ -187,14 +187,15 @@ ran, or it will lie on camera.
 - Ep 1 **published**: https://www.youtube.com/watch?v=X7FgE9j1XLY
 - Ep 2 **published**: https://www.youtube.com/watch?v=FoElBiKp_fI
 - Ep 3 **published**: https://www.youtube.com/watch?v=1Oxev2holT4
+- Ep 4 **published**: https://www.youtube.com/watch?v=e-FeE6O9AhM
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 4 — templates and static files: replace the welcome page, style StandardPage
-2. Ep 5 onward — same loop: build and verify in `site/`, then script, then render
+1. Ep 5 — StreamField: replace the RichTextField body with real content blocks
+2. Ep 6 onward — same loop: build and verify in `site/`, then script, then render
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then
 real captured output appears. Every code episode from here uses it.

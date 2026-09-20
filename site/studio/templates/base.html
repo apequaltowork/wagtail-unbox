@@ -34,7 +34,22 @@
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
-        {% block content %}{% endblock %}
+        <header class="site-header">
+            <div class="wrap">
+                {# slugurl finds a page by slug, so this keeps working if Home is renamed #}
+                <a class="brand" href="{% slugurl 'home' %}">Studio</a>
+            </div>
+        </header>
+
+        <main class="wrap">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <div class="wrap">
+                <p>&copy; {% now "Y" %} Studio. Built with Wagtail.</p>
+            </div>
+        </footer>
 
         {# Global javascript #}
         <script type="text/javascript" src="{% static 'js/studio.js' %}"></script>

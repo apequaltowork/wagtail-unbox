@@ -1,0 +1,103 @@
+/* Studio — hand-written CSS. No build step, no framework.
+   Served from studio/static/css/ via STATICFILES_DIRS. */
+
+:root {
+    --ink: #1c2028;
+    --muted: #5d6675;
+    --line: #e4e7ec;
+    --accent: #2b6f6e;
+    --bg: #ffffff;
+    --bg-soft: #f7f8fa;
+    --wrap: 46rem;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.65 -apple-system, "Segoe UI", system-ui, sans-serif;
+}
+
+.wrap {
+    max-width: var(--wrap);
+    margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+/* ---- header ---- */
+.site-header {
+    border-bottom: 1px solid var(--line);
+    padding: 1.25rem 0;
+    margin-bottom: 3rem;
+}
+.brand {
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: .02em;
+    color: var(--ink);
+    text-decoration: none;
+}
+.brand:hover { color: var(--accent); }
+
+/* ---- type ---- */
+h1 {
+    font-size: 2.6rem;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    margin: 0 0 1rem;
+}
+h2 { font-size: 1.6rem; margin: 2.5rem 0 .75rem; }
+p { margin: 0 0 1.15rem; }
+
+.intro {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: var(--muted);
+    margin-bottom: 2rem;
+}
+
+a { color: var(--accent); }
+
+/* ---- child page list ---- */
+.page-list {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+}
+.page-list li { border-bottom: 1px solid var(--line); }
+.page-list a {
+    display: block;
+    padding: 1rem 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.page-list a:hover { color: var(--ink); }
+
+.back {
+    display: inline-block;
+    margin-top: 2rem;
+    font-size: .95rem;
+    text-decoration: none;
+}
+
+/* ---- footer ---- */
+.site-footer {
+    margin-top: 5rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--line);
+    background: var(--bg-soft);
+    color: var(--muted);
+    font-size: .9rem;
+}
+.site-footer p { margin: 0; }
+
+/* ---- small screens ---- */
+@media (max-width: 34rem) {
+    h1 { font-size: 2rem; }
+    .intro { font-size: 1.15rem; }
+    .site-header { margin-bottom: 2rem; }
+}
