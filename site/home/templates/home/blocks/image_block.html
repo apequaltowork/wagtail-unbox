@@ -1,0 +1,11 @@
+{% load wagtailimages_tags %}
+<figure class="img img--{{ value.width }}">
+    {% if value.width == "wide" %}
+        {% srcset_image value.image width-{1200,1800,2400} sizes="100vw" %}
+    {% else %}
+        {% srcset_image value.image width-{600,900,1200} sizes="(max-width: 46rem) 100vw, 46rem" %}
+    {% endif %}
+    {% if value.caption %}
+        <figcaption>{{ value.caption }}</figcaption>
+    {% endif %}
+</figure>

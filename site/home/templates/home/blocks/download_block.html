@@ -1,0 +1,6 @@
+<p class="download">
+    <a href="{{ value.document.url }}" download>
+        {{ value.title|default:value.document.title }}
+    </a>
+    <span class="meta">{{ value.document.file_extension|upper }} · {{ value.document.file.size|filesizeformat }}</span>
+</p>

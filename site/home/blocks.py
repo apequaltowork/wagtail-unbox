@@ -3,9 +3,11 @@
 A StreamField is a list of blocks. This file defines the blocks an editor is
 allowed to choose from, smallest first:
 
-    QuoteBlock     - a StructBlock: several fields that belong together
-    ServicesBlock  - a StructBlock containing a ListBlock: a repeating group
-    CTABlock       - a StructBlock that links to a page or an external URL
+    QuoteBlock            - a StructBlock: several fields that belong together
+    ServicesBlock         - a StructBlock containing a ListBlock: a repeating group
+    CTABlock              - a StructBlock that links to a page or an external URL
+    CaptionedImageBlock   - an image, its alt text, and a caption
+    DownloadBlock         - a document the visitor can download
 
 and BodyBlock at the bottom, which is the StreamBlock the model actually uses.
 
@@ -15,6 +17,8 @@ is exactly what we want.
 """
 
 from wagtail import blocks
+from wagtail.documents.blocks import DocumentChooserBlock
+from wagtail.images.blocks import ImageBlock
 
 
 class QuoteBlock(blocks.StructBlock):
@@ -73,6 +77,44 @@ class CTABlock(blocks.StructBlock):
         template = "home/blocks/cta_block.html"
 
 
+class CaptionedImageBlock(blocks.StructBlock):
+    """An image with a caption and a width choice.
+
+    `ImageBlock` rather than `ImageChooserBlock`: it carries alt text and a
+    "decorative" flag alongside the image, so accessibility is part of the
+    content instead of something the template has to invent. It behaves as an
+    Image everywhere an ImageChooserBlock value used to.
+    """
+
+    image = ImageBlock()
+    caption = blocks.CharBlock(required=False, max_length=180)
+    width = blocks.ChoiceBlock(
+        choices=[("text", "Text width"), ("wide", "Full width")],
+        default="text",
+    )
+
+    class Meta:
+        icon = "image"
+        label = "Image"
+        template = "home/blocks/image_block.html"
+
+
+class DownloadBlock(blocks.StructBlock):
+    """A document the visitor can download: a PDF, a price list, a brochure."""
+
+    document = DocumentChooserBlock()
+    title = blocks.CharBlock(
+        required=False,
+        max_length=120,
+        help_text="Defaults to the document's own title.",
+    )
+
+    class Meta:
+        icon = "doc-full"
+        label = "Download"
+        template = "home/blocks/download_block.html"
+
+
 class BodyBlock(blocks.StreamBlock):
     """The top-level block: everything an editor may put in a page body."""
 
@@ -85,8 +127,10 @@ class BodyBlock(blocks.StreamBlock):
         icon="pilcrow",
         features=["bold", "italic", "link", "ol", "ul", "document-link"],
     )
+    image = CaptionedImageBlock()
     quote = QuoteBlock()
     services = ServicesBlock()
+    download = DownloadBlock()
     cta = CTABlock()
 
     class Meta:

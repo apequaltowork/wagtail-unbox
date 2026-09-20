@@ -158,6 +158,43 @@ a { color: var(--accent); }
     text-decoration: none;
 }
 
+/* ---- images & documents (episode 6) ---- */
+figure { margin: 0; }
+figure img { display: block; width: 100%; height: auto; border-radius: 10px; }
+figcaption {
+    margin-top: .6rem;
+    font-size: .9rem;
+    color: var(--muted);
+}
+
+.hero { margin: 0 0 2.5rem; }
+
+.block-image { margin: 2.5rem 0; }
+
+/* "Full width" really is wider than the text column. Centred with a transform
+   rather than 100vw margins, so a visible scrollbar can't cause sideways
+   scrolling on the page. */
+.img--wide {
+    width: min(64rem, 92vw);
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+.download {
+    margin: 2rem 0;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-soft);
+}
+.download a { font-weight: 600; }
+.download .meta {
+    display: block;
+    margin-top: .25rem;
+    font-size: .85rem;
+    color: var(--muted);
+}
+
 /* ---- small screens ---- */
 @media (max-width: 34rem) {
     h1 { font-size: 2rem; }

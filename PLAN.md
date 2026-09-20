@@ -70,7 +70,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 |---|---|---|
 | 04 | Templates & Static Files | ✅ **Published** — base.html, pageurl/slugurl, plain CSS |
 | 05 | StreamField, Properly | ✅ **Published** — `StructBlock`, `ListBlock`, block templates, and the JSON_VALID migration |
-| 06 | Images & Documents | Renditions, focal points, `ImageChooserBlock` |
+| 06 | Images & Documents | ✅ **Published** — renditions, focal points, `ImageBlock`, and the stale-rendition bug |
 | 07 | Blog: Parent & Child Pages | `BlogIndexPage`, `subpage_types`, pagination |
 | 08 | Snippets & Reusable Content | `register_snippet`, `SnippetChooserBlock` |
 | 09 | Navigation & Site Settings | Menus from the tree, `BaseSiteSetting` |
@@ -189,14 +189,15 @@ ran, or it will lie on camera.
 - Ep 3 **published**: https://www.youtube.com/watch?v=1Oxev2holT4
 - Ep 4 **published**: https://www.youtube.com/watch?v=e-FeE6O9AhM
 - Ep 5 **published**: https://www.youtube.com/watch?v=8_wrJLU57Qw
+- Ep 6 **published**: https://www.youtube.com/watch?v=YYxtwAx4a0w
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 6 — Images & Documents: the image model, renditions, `ImageChooserBlock`
-2. Ep 7 onward — same loop: build and verify in `site/`, then script, then render
+1. Ep 7 — Blog: an index page and its posts, `subpage_types`, pagination
+2. Ep 8 onward — same loop: build and verify in `site/`, then script, then render
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then
 real captured output appears. Every code episode from here uses it.
@@ -236,3 +237,8 @@ Each of these cost real time and is worth not rediscovering.
   a terminal scene had narration much longer than its typing.
 - **Wagtail 7 wraps every StreamField block** in `w-block-NAME block-NAME`. Adding the same
   class in your own block template applies the styling twice.
+- **Renditions are database rows, not files.** `get_rendition()` returns a row without ever
+  checking the disk, so clearing `media/` leaves the site serving 404s with nothing in the
+  logs. `wagtail_update_image_renditions --purge-only` is the fix.
+- **A screenshot slide has a height budget.** A tall page capture scaled to full slide width
+  runs off the bottom of the frame. Hold shots to ~78% width, or crop to roughly 2:1.
