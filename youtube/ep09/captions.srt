@@ -1,0 +1,279 @@
+1
+00:00:00,350 --> 00:00:03,550
+Navigation, and site settings.
+
+2
+00:00:04,350 --> 00:00:06,856
+There is an About page and a journal,
+
+3
+00:00:06,856 --> 00:00:12,478
+and the only way to reach either of them is the list at the bottom of the homepage.
+
+4
+00:00:12,478 --> 00:00:17,694
+And the footer says Studio, because somebody typed that word into a template.
+
+5
+00:00:17,694 --> 00:00:21,216
+Today, a real menu, and details the client can edit.
+
+6
+00:00:22,016 --> 00:00:25,847
+There is no menu model here, and no hard coded links.
+
+7
+00:00:25,847 --> 00:00:31,847
+The menu is simply the children of the site's root page that are live and marked as
+
+8
+00:00:31,847 --> 00:00:32,425
+in menu.
+
+9
+00:00:32,425 --> 00:00:36,834
+So an editor adds a page to the menu by ticking one checkbox,
+
+10
+00:00:36,834 --> 00:00:38,786
+on that page's Promote tab.
+
+11
+00:00:39,586 --> 00:00:41,453
+It is an inclusion tag.
+
+12
+00:00:41,453 --> 00:00:46,891
+It finds the site for this request, takes the root page's children,
+
+13
+00:00:46,891 --> 00:00:49,651
+and works out which one is active.
+
+14
+00:00:49,651 --> 00:00:52,492
+Then base.html just says main menu.
+
+15
+00:00:53,292 --> 00:00:55,250
+Reload the page, and.
+
+16
+00:00:55,250 --> 00:00:57,301
+Template syntax error.
+
+17
+00:00:57,301 --> 00:01:01,776
+Navigation tags is not a registered tag library.
+
+18
+00:01:01,776 --> 00:01:04,014
+And the code is correct.
+
+19
+00:01:04,814 --> 00:01:10,222
+The development server had already reloaded itself for the models change a minute
+
+20
+00:01:10,222 --> 00:01:10,756
+earlier.
+
+21
+00:01:10,756 --> 00:01:14,896
+But the reloader only watches files that are already imported,
+
+22
+00:01:14,896 --> 00:01:18,034
+and a brand new tag library is not one of them.
+
+23
+00:01:18,034 --> 00:01:23,576
+So any time you add a new template tags module, stop the server and start it again.
+
+24
+00:01:24,376 --> 00:01:27,233
+Restarted, and now the menu is empty.
+
+25
+00:01:27,233 --> 00:01:28,855
+Nothing there at all.
+
+26
+00:01:28,855 --> 00:01:33,721
+Because every page on this site has show in menus set to false.
+
+27
+00:01:33,721 --> 00:01:36,810
+That is the default for every page type.
+
+28
+00:01:36,810 --> 00:01:42,370
+Tick the box on About and on the journal, publish, and the menu appears.
+
+29
+00:01:43,170 --> 00:01:45,908
+And to stop that happening next time,
+
+30
+00:01:45,908 --> 00:01:51,383
+set show in menus default to true on the page types that belong in a menu.
+
+31
+00:01:51,383 --> 00:01:53,307
+But be clear what it does.
+
+32
+00:01:53,307 --> 00:01:55,970
+New pages start with the box ticked.
+
+33
+00:01:55,970 --> 00:01:59,004
+Pages that already exist are not touched.
+
+34
+00:01:59,804 --> 00:02:03,507
+The active item is a prefix match on the URL path.
+
+35
+00:02:03,507 --> 00:02:08,099
+So when you are reading a post, which lives under the journal,
+
+36
+00:02:08,099 --> 00:02:10,321
+the journal stays highlighted.
+
+37
+00:02:10,321 --> 00:02:13,358
+And because a URL path always ends in a/,
+
+38
+00:02:13,358 --> 00:02:17,654
+About can never accidentally match a page called About us.
+
+39
+00:02:18,454 --> 00:02:19,764
+And it is cheap.
+
+40
+00:02:19,764 --> 00:02:23,612
+I rendered the menu tag on its own and counted.
+
+41
+00:02:23,612 --> 00:02:25,168
+One database query.
+
+42
+00:02:25,168 --> 00:02:26,642
+No caching needed.
+
+43
+00:02:26,642 --> 00:02:33,520
+That changes once you build dropdowns, because each level is another query per item.
+
+44
+00:02:34,320 --> 00:02:35,481
+Now the footer.
+
+45
+00:02:35,481 --> 00:02:39,431
+Wagtail's settings app, plus its context processor,
+
+46
+00:02:39,431 --> 00:02:44,154
+and every template on the site can read the studio's details.
+
+47
+00:02:44,954 --> 00:02:49,322
+A settings model is a normal Django model with one decorator.
+
+48
+00:02:49,322 --> 00:02:54,048
+Site setting, rather than generic setting, means one row per site,
+
+49
+00:02:54,048 --> 00:02:59,276
+so if this install ever runs a second site, it gets its own phone number.
+
+50
+00:03:00,076 --> 00:03:01,201
+And watch this.
+
+51
+00:03:01,201 --> 00:03:03,226
+No rows before any request.
+
+52
+00:03:03,226 --> 00:03:05,777
+Load one page, and there is a row.
+
+53
+00:03:05,777 --> 00:03:11,328
+Wagtail creates it the first time something reads it, using your defaults.
+
+54
+00:03:11,328 --> 00:03:15,378
+Which is why the studio name needs a sensible default.
+
+55
+00:03:15,378 --> 00:03:20,854
+It is what the header shows before anyone has opened the settings screen.
+
+56
+00:03:21,654 --> 00:03:26,539
+In a template it is settings, then the app label, then the model name,
+
+57
+00:03:26,539 --> 00:03:27,586
+then the field.
+
+58
+00:03:27,586 --> 00:03:32,332
+The brand, the email as a mail to link, and the phone as a tel link,
+
+59
+00:03:32,332 --> 00:03:35,472
+with the spaces cut out so it actually dials.
+
+60
+00:03:36,272 --> 00:03:37,526
+And here it is.
+
+61
+00:03:37,526 --> 00:03:42,962
+Reading a post, and the journal is still highlighted in the menu.
+
+62
+00:03:43,762 --> 00:03:44,845
+And the footer.
+
+63
+00:03:44,845 --> 00:03:49,974
+The name, the email, the phone number, the address and the social link.
+
+64
+00:03:49,974 --> 00:03:52,935
+All of it comes from the settings screen,
+
+65
+00:03:52,935 --> 00:03:56,980
+and the client can change any of it without calling you.
+
+66
+00:03:57,780 --> 00:04:00,294
+Commit, and tag.
+
+67
+00:04:01,094 --> 00:04:02,804
+Next episode, forms.
+
+68
+00:04:02,804 --> 00:04:09,560
+A contact page that emails the studio, and keeps every submission in the admin.
+
+69
+00:04:10,360 --> 00:04:14,960
+Next episode, forms.
+
+70
+00:04:14,960 --> 00:04:19,560
+Thanks for watching.

@@ -16,6 +16,7 @@ tags, chapters, thumbnail, pinned comment.
 | [ep06/](ep06/README.md) | Ep 6 — Images & Documents |
 | [ep07/](ep07/README.md) | Ep 7 — Blog: Parent & Child Pages |
 | [ep08/](ep08/README.md) | Ep 8 — Snippets & Reusable Content |
+| [ep09/](ep09/README.md) | Ep 9 — Navigation & Site Settings |
 | [channel.md](channel.md) | Channel-level settings that apply to every upload |
 
 ## Published

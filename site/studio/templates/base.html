@@ -1,4 +1,4 @@
-{% load static wagtailcore_tags wagtailuserbar %}
+{% load static wagtailcore_tags wagtailuserbar navigation_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +37,8 @@
         <header class="site-header">
             <div class="wrap">
                 {# slugurl finds a page by slug, so this keeps working if Home is renamed #}
-                <a class="brand" href="{% slugurl 'home' %}">Studio</a>
+                <a class="brand" href="{% slugurl 'home' %}">{{ settings.home.StudioSettings.studio_name }}</a>
+                {% main_menu %}
             </div>
         </header>
 
@@ -47,7 +48,25 @@
 
         <footer class="site-footer">
             <div class="wrap">
-                <p>&copy; {% now "Y" %} Studio. Built with Wagtail.</p>
+                {% with s=settings.home.StudioSettings %}
+                    <div class="footer-grid">
+                        <p>&copy; {% now "Y" %} {{ s.studio_name }}. Built with Wagtail.</p>
+                        {% if s.email or s.phone %}
+                            <p>
+                                {% if s.email %}<a href="mailto:{{ s.email }}">{{ s.email }}</a>{% endif %}
+                                {% if s.email and s.phone %}<br>{% endif %}
+                                {% if s.phone %}<a href="tel:{{ s.phone|cut:' ' }}">{{ s.phone }}</a>{% endif %}
+                            </p>
+                        {% endif %}
+                        {% if s.address %}<p>{{ s.address|linebreaksbr }}</p>{% endif %}
+                        {% if s.linkedin_url or s.instagram_url %}
+                            <p>
+                                {% if s.linkedin_url %}<a href="{{ s.linkedin_url }}">LinkedIn</a>{% endif %}
+                                {% if s.instagram_url %}<a href="{{ s.instagram_url }}">Instagram</a>{% endif %}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endwith %}
             </div>
         </footer>
 

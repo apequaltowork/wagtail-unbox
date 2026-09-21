@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+{% if items %}
+    <nav class="main-menu" aria-label="Main">
+        <ul>
+            {% for item in items %}
+                <li>
+                    <a href="{% pageurl item.page %}"{% if item.active %} aria-current="page"{% endif %}>{{ item.page.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endif %}

@@ -73,7 +73,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 | 06 | Images & Documents | ✅ **Published** — renditions, focal points, `ImageBlock`, and the stale-rendition bug |
 | 07 | Blog: Parent & Child Pages | ✅ **Published** — a `blog` app, page-type rules, `child_of`, pagination |
 | 08 | Snippets & Reusable Content | 🎬 **Rendered** — team and testimonial snippets, `SnippetViewSet`, tags, filter-safe pagination |
-| 09 | Navigation & Site Settings | Menus from the tree, `BaseSiteSetting` |
+| 09 | Navigation & Site Settings | 🎬 **Rendered** — menu from the tree, `show_in_menus`, `BaseSiteSetting` footer |
 | 10 | Forms That Work | `AbstractEmailForm`, contact page, submissions |
 | 11 | Search | `search_fields`, indexing, the `search/` app finally doing something |
 
@@ -192,13 +192,14 @@ ran, or it will lie on camera.
 - Ep 6 **published**: https://www.youtube.com/watch?v=YYxtwAx4a0w
 - Ep 7 **published**: https://www.youtube.com/watch?v=lvWFyLOHSBo
 - Ep 8 rendered (4:37), `ep08-end` tagged — awaiting upload
+- Ep 9 rendered (4:17), `ep09-end` tagged — awaiting upload
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 9 — Navigation & Site Settings: menus from the tree, `BaseSiteSetting`
+1. Ep 10 — Forms That Work: a contact page, spam basics, submissions in the admin
 2. Ep 14 stays on hold until the host is decided
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then

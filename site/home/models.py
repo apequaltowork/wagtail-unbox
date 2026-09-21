@@ -1,6 +1,7 @@
 from django.db import models
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 
@@ -88,6 +89,10 @@ class StandardPage(HeroMixin, Page):
     parent_page_types = ["home.HomePage", "home.StandardPage"]
     subpage_types = ["home.StandardPage"]
 
+    # New pages of this type start with "Show in menus" ticked. Pages that
+    # already exist keep whatever they have -- this is only a default.
+    show_in_menus_default = True
+
 
 # ---------------------------------------------------------------- snippets
 # Snippets are content that is not a page: it has no URL and no place in the
@@ -138,3 +143,37 @@ class Testimonial(models.Model):
 
     def __str__(self):
         return f"{self.author}: {self.quote[:40]}"
+
+
+# ---------------------------------------------------------------- settings
+
+
+@register_setting(icon="cog")
+class StudioSettings(BaseSiteSetting):
+    """Studio-wide details the client edits once: Settings -> Studio settings.
+
+    BaseSiteSetting, not BaseGenericSetting: one row per Site, so a second
+    site on the same install can have its own phone number.
+    """
+
+    studio_name = models.CharField(max_length=80, default="Studio")
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=40, blank=True)
+    address = models.TextField(blank=True, max_length=300)
+    linkedin_url = models.URLField("LinkedIn URL", blank=True)
+    instagram_url = models.URLField("Instagram URL", blank=True)
+
+    panels = [
+        FieldPanel("studio_name"),
+        MultiFieldPanel(
+            [FieldPanel("email"), FieldPanel("phone"), FieldPanel("address")],
+            heading="Contact",
+        ),
+        MultiFieldPanel(
+            [FieldPanel("linkedin_url"), FieldPanel("instagram_url")],
+            heading="Social",
+        ),
+    ]
+
+    class Meta:
+        verbose_name = "Studio settings"

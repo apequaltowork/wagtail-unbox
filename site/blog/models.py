@@ -25,6 +25,7 @@ class BlogIndexPage(Page):
     parent_page_types = ["home.HomePage"]
     subpage_types = ["blog.BlogPage"]
     max_count_per_parent = 1
+    show_in_menus_default = True
 
     POSTS_PER_PAGE = 3
 
