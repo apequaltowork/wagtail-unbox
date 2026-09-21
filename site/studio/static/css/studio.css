@@ -287,6 +287,33 @@ figcaption {
 .footer-grid a { color: var(--muted); }
 .footer-grid p a + a { margin-left: .75rem; }
 
+/* ---- contact form (episode 10) ---- */
+.contact-form { margin-top: 2rem; max-width: 32rem; }
+.contact-form .field { margin-bottom: 1.25rem; }
+.contact-form label { display: block; margin-bottom: .35rem; font-weight: 600; font-size: .95rem; }
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+    width: 100%;
+    padding: .6rem .75rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font: inherit;
+    background: #fff;
+}
+.contact-form textarea { min-height: 8rem; }
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.contact-form .help { margin: .3rem 0 0; font-size: .85rem; color: var(--muted); }
+.contact-form .error { margin: .3rem 0 0; font-size: .85rem; color: #b42318; }
+.contact-form .has-error input,
+.contact-form .has-error textarea { border-color: #b42318; }
+.button--solid { background: var(--accent); color: #fff; border: 0; cursor: pointer; font: inherit; font-weight: 600; }
+
+/* The honeypot: off-screen for people, still an ordinary input for bots. */
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
 /* ---- small screens ---- */
 @media (max-width: 34rem) {
     h1 { font-size: 2rem; }

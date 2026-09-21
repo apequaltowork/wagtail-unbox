@@ -1,0 +1,283 @@
+1
+00:00:00,350 --> 00:00:03,550
+Forms that work.
+
+2
+00:00:04,350 --> 00:00:09,404
+The site has a menu, a journal and a team, and no way to get in touch.
+
+3
+00:00:09,404 --> 00:00:11,426
+Today we add a contact form.
+
+4
+00:00:11,426 --> 00:00:16,480
+And a form that actually works turns out to mean four separate things,
+
+5
+00:00:16,480 --> 00:00:19,224
+three of which the defaults get wrong.
+
+6
+00:00:20,024 --> 00:00:20,862
+Two models.
+
+7
+00:00:20,862 --> 00:00:26,956
+A form field, tied to the page with a parental key, and the contact page itself,
+
+8
+00:00:26,956 --> 00:00:29,394
+which is an abstract email form.
+
+9
+00:00:29,394 --> 00:00:33,659
+The editor builds the form in the admin, field by field.
+
+10
+00:00:33,659 --> 00:00:36,935
+Every submission is stored in the database,
+
+11
+00:00:36,935 --> 00:00:40,058
+and emailed if the page has a to address.
+
+12
+00:00:40,858 --> 00:00:46,149
+The template loops over the form and prints each field with its errors.
+
+13
+00:00:46,149 --> 00:00:51,514
+Leave out the CSRF token and every single submission is a 403 forbidden.
+
+14
+00:00:51,514 --> 00:00:55,612
+That is the first of the four things, and the easy one.
+
+15
+00:00:56,412 --> 00:00:57,564
+Second thing.
+
+16
+00:00:57,564 --> 00:01:02,617
+Submit the form before you have written a thank you page.
+
+17
+00:01:02,617 --> 00:01:03,770
+Five hundred.
+
+18
+00:01:03,770 --> 00:01:05,897
+Template does not exist.
+
+19
+00:01:05,897 --> 00:01:06,606
+And yet.
+
+20
+00:01:06,606 --> 00:01:10,950
+The submission was saved, and the email was sent.
+
+21
+00:01:11,750 --> 00:01:14,396
+Think about what the visitor sees.
+
+22
+00:01:14,396 --> 00:01:15,563
+A server error.
+
+23
+00:01:15,563 --> 00:01:19,921
+So they assume nothing happened, and they send it again,
+
+24
+00:01:19,921 --> 00:01:22,567
+and the studio gets two enquiries.
+
+25
+00:01:22,567 --> 00:01:27,626
+The thank you template is the page template's name plus _landing,
+
+26
+00:01:27,626 --> 00:01:29,105
+in the same folder.
+
+27
+00:01:29,105 --> 00:01:30,272
+Write it first.
+
+28
+00:01:31,072 --> 00:01:32,023
+Third thing.
+
+29
+00:01:32,023 --> 00:01:34,164
+Refresh the thank you page.
+
+30
+00:01:34,164 --> 00:01:38,446
+Wagtail renders it as the direct response to the post,
+
+31
+00:01:38,446 --> 00:01:42,569
+so refreshing makes the browser send the post again.
+
+32
+00:01:42,569 --> 00:01:44,789
+Two submissions, two emails.
+
+33
+00:01:44,789 --> 00:01:46,930
+Every refresh, another one.
+
+34
+00:01:47,730 --> 00:01:50,785
+The fix is the oldest pattern on the web.
+
+35
+00:01:50,785 --> 00:01:52,276
+Post, redirect, get.
+
+36
+00:01:52,276 --> 00:01:57,864
+After a good submission, redirect to the contact page with sent equals one,
+
+37
+00:01:57,864 --> 00:02:01,069
+and render the thank you template for that.
+
+38
+00:02:01,069 --> 00:02:06,583
+Now the post answers with a 302, and I refreshed the thank you page twice.
+
+39
+00:02:06,583 --> 00:02:08,148
+Still one submission.
+
+40
+00:02:08,948 --> 00:02:09,895
+Fourth thing.
+
+41
+00:02:09,895 --> 00:02:12,225
+The budget question is optional.
+
+42
+00:02:12,225 --> 00:02:17,542
+But Wagtail builds a dropdown from the editor's choices and nothing else,
+
+43
+00:02:17,542 --> 00:02:19,581
+so there is no blank option.
+
+44
+00:02:19,581 --> 00:02:24,606
+Under five thousand is selected by default, and the browser sends it.
+
+45
+00:02:24,606 --> 00:02:29,486
+Every single enquiry records a budget that the person never picked.
+
+46
+00:02:30,286 --> 00:02:33,117
+A small custom form builder fixes it.
+
+47
+00:02:33,117 --> 00:02:38,931
+If a dropdown is optional, put a blank choice in front of the editor's list.
+
+48
+00:02:38,931 --> 00:02:44,440
+Tell the page to use it, and a budget left blank is now stored as blank.
+
+49
+00:02:45,240 --> 00:02:45,931
+And spam.
+
+50
+00:02:45,931 --> 00:02:50,922
+A honeypot is an ordinary text input, pushed off screen with CSS.
+
+51
+00:02:50,922 --> 00:02:55,529
+People never see it, and keyboard users can not tab into it.
+
+52
+00:02:55,529 --> 00:02:58,216
+Bots fill in every input they find.
+
+53
+00:02:58,216 --> 00:03:03,822
+If it comes back filled in, the bot gets exactly the same thank you page,
+
+54
+00:03:03,822 --> 00:03:06,125
+and nothing is stored or sent.
+
+55
+00:03:06,125 --> 00:03:10,348
+Do not make it a hidden input, because bots skip those.
+
+56
+00:03:10,348 --> 00:03:13,266
+And never tell the bot that it failed.
+
+57
+00:03:14,066 --> 00:03:17,411
+In development, the email does not go anywhere.
+
+58
+00:03:17,411 --> 00:03:21,467
+The development settings already use the console backend,
+
+59
+00:03:21,467 --> 00:03:24,883
+so it prints in the terminal running the server.
+
+60
+00:03:24,883 --> 00:03:26,591
+That is the whole email.
+
+61
+00:03:26,591 --> 00:03:28,940
+Real sending is episode thirteen.
+
+62
+00:03:29,740 --> 00:03:31,280
+And here is the form.
+
+63
+00:03:31,280 --> 00:03:34,726
+Notice contact appeared in the menu on its own,
+
+64
+00:03:34,726 --> 00:03:38,758
+because of the show in menus default from last episode.
+
+65
+00:03:39,558 --> 00:03:43,215
+And the thank you page, at its own address.
+
+66
+00:03:43,215 --> 00:03:45,936
+Refresh it as often as you like.
+
+67
+00:03:46,736 --> 00:03:49,250
+Commit, and tag.
+
+68
+00:03:50,050 --> 00:03:51,926
+Next episode, search.
+
+69
+00:03:51,926 --> 00:03:57,820
+The search app we unboxed in episode two, finally doing something.
+
+70
+00:03:58,620 --> 00:04:03,332
+Next episode, search.
+
+71
+00:04:03,332 --> 00:04:07,820
+Thanks for watching.

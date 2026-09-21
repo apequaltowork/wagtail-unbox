@@ -1,8 +1,16 @@
+from django import forms
 from django.db import models
+from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from modelcluster.fields import ParentalKey
+
+from wagtail.admin.panels import FieldPanel, FieldRowPanel, InlinePanel, MultiFieldPanel
+from wagtail.contrib.forms.forms import FormBuilder
+from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
+from wagtail.contrib.forms.panels import FormSubmissionsPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
-from wagtail.fields import StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 
 from home.blocks import BodyBlock
@@ -67,7 +75,7 @@ class HomePage(HeroMixin, Page):
 
     # The homepage sits directly under the root, and there is only one of it.
     parent_page_types = ["wagtailcore.Page"]
-    subpage_types = ["home.StandardPage", "blog.BlogIndexPage"]
+    subpage_types = ["home.StandardPage", "blog.BlogIndexPage", "home.ContactPage"]
     max_count = 1
 
 
@@ -177,3 +185,90 @@ class StudioSettings(BaseSiteSetting):
 
     class Meta:
         verbose_name = "Studio settings"
+
+
+# ---------------------------------------------------------------- contact form
+
+
+class FormField(AbstractFormField):
+    """One field on the contact form, defined by the editor in the admin."""
+
+    page = ParentalKey("ContactPage", on_delete=models.CASCADE, related_name="form_fields")
+
+
+class StudioFormBuilder(FormBuilder):
+    """Give optional dropdowns a blank first choice.
+
+    Wagtail builds a dropdown from the editor's choices and nothing else, so an
+    optional one has no empty option. The browser submits whatever is showing
+    -- the first choice -- and every enquiry quietly says "Under 5k".
+    """
+
+    def create_dropdown_field(self, field, options):
+        form_field = super().create_dropdown_field(field, options)
+        if not field.required:
+            form_field.choices = [("", "Choose one (optional)")] + list(form_field.choices)
+        return form_field
+
+
+class ContactPage(AbstractEmailForm):
+    """A form the editor builds field by field. Each submission is stored, and
+    emailed to `to_address` if one is set.
+
+    Two changes from the stock form page:
+
+    * A honeypot field. Bots fill in every input; people never see this one.
+      A filled honeypot gets the normal thank-you page, but nothing is stored
+      and nothing is emailed -- telling a bot it failed only teaches it.
+    * Post/Redirect/Get. Wagtail renders the thank-you page as the response
+      to the POST, so refreshing it resubmits the form. We redirect instead.
+    """
+
+    HONEYPOT = "website"
+    form_builder = StudioFormBuilder
+
+    intro = RichTextField(blank=True)
+    thank_you_text = RichTextField(blank=True)
+
+    content_panels = AbstractEmailForm.content_panels + [
+        FormSubmissionsPanel(),
+        FieldPanel("intro"),
+        InlinePanel("form_fields", label="Form fields"),
+        FieldPanel("thank_you_text"),
+        MultiFieldPanel(
+            [
+                FieldRowPanel([FieldPanel("from_address"), FieldPanel("to_address")]),
+                FieldPanel("subject"),
+            ],
+            heading="Email",
+        ),
+    ]
+
+    parent_page_types = ["home.HomePage"]
+    subpage_types = []
+    max_count = 1
+    show_in_menus_default = True
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        form.fields[self.HONEYPOT] = forms.CharField(
+            required=False,
+            label="Leave this field empty",
+            widget=forms.TextInput(attrs={"autocomplete": "off", "tabindex": "-1"}),
+        )
+        return form
+
+    def process_form_submission(self, form):
+        if form.cleaned_data.pop(self.HONEYPOT, ""):
+            return None
+        return super().process_form_submission(form)
+
+    def render_landing_page(self, request, form_submission=None, *args, **kwargs):
+        return redirect(self.url + "?sent=1")
+
+    def serve(self, request, *args, **kwargs):
+        if request.method == "GET" and request.GET.get("sent"):
+            return TemplateResponse(
+                request, self.get_landing_page_template(request), self.get_context(request)
+            )
+        return super().serve(request, *args, **kwargs)

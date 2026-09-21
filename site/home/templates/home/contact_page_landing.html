@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-contactpage-landing{% endblock %}
+
+{% block content %}
+    <h1>Message sent</h1>
+    {{ page.thank_you_text|richtext }}
+    <p><a class="back" href="{% slugurl 'home' %}">&larr; Back to the homepage</a></p>
+{% endblock content %}
