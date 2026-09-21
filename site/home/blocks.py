@@ -8,6 +8,8 @@ allowed to choose from, smallest first:
     CTABlock              - a StructBlock that links to a page or an external URL
     CaptionedImageBlock   - an image, its alt text, and a caption
     DownloadBlock         - a document the visitor can download
+    TestimonialBlock      - one testimonial snippet, chosen per page
+    TeamBlock             - the whole team snippet list, fetched in get_context
 
 and BodyBlock at the bottom, which is the StreamBlock the model actually uses.
 
@@ -19,6 +21,7 @@ is exactly what we want.
 from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
 
 
 class QuoteBlock(blocks.StructBlock):
@@ -115,6 +118,43 @@ class DownloadBlock(blocks.StructBlock):
         template = "home/blocks/download_block.html"
 
 
+class TestimonialBlock(blocks.StructBlock):
+    """One testimonial, chosen from the Testimonials snippet.
+
+    The model is named as a string. Importing it would be circular: home.models
+    imports this file to build BodyBlock.
+    """
+
+    testimonial = SnippetChooserBlock("home.Testimonial")
+
+    class Meta:
+        icon = "openquote"
+        label = "Testimonial"
+        template = "home/blocks/testimonial_block.html"
+
+
+class TeamBlock(blocks.StructBlock):
+    """The whole team, in the order set in the admin.
+
+    Nothing to choose: the block fetches the snippets itself in get_context,
+    so adding a person to the team updates every page that shows it.
+    """
+
+    heading = blocks.CharBlock(max_length=80, default="The team")
+
+    def get_context(self, value, parent_context=None):
+        from home.models import TeamMember  # not at module level -- circular
+
+        context = super().get_context(value, parent_context=parent_context)
+        context["members"] = TeamMember.objects.select_related("photo")
+        return context
+
+    class Meta:
+        icon = "group"
+        label = "Team"
+        template = "home/blocks/team_block.html"
+
+
 class BodyBlock(blocks.StreamBlock):
     """The top-level block: everything an editor may put in a page body."""
 
@@ -131,7 +171,9 @@ class BodyBlock(blocks.StreamBlock):
     quote = QuoteBlock()
     services = ServicesBlock()
     download = DownloadBlock()
+    testimonial = TestimonialBlock()
+    team = TeamBlock()
     cta = CTABlock()
 
     class Meta:
-        block_counts = {"services": {"max_num": 1}}
+        block_counts = {"services": {"max_num": 1}, "team": {"max_num": 1}}

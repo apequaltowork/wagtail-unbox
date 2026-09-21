@@ -14,5 +14,13 @@
 
     {{ page.body }}
 
+    {% if page.tags.all %}
+        <ul class="tags">
+            {% for t in page.tags.all %}
+                <li><a href="{% pageurl page.get_parent %}?tag={{ t.slug }}">{{ t.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <p><a class="back" href="{% pageurl page.get_parent %}">&larr; {{ page.get_parent.title }}</a></p>
 {% endblock content %}

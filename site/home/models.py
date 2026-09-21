@@ -2,7 +2,7 @@ from django.db import models
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
-from wagtail.models import Page
+from wagtail.models import Orderable, Page
 
 from home.blocks import BodyBlock
 
@@ -87,3 +87,54 @@ class StandardPage(HeroMixin, Page):
 
     parent_page_types = ["home.HomePage", "home.StandardPage"]
     subpage_types = ["home.StandardPage"]
+
+
+# ---------------------------------------------------------------- snippets
+# Snippets are content that is not a page: it has no URL and no place in the
+# tree. Written once in the admin, used on as many pages as you like.
+# They are registered with the admin in home/wagtail_hooks.py.
+
+
+class TeamMember(Orderable):
+    """One person at the studio. Orderable gives the admin drag-and-drop order."""
+
+    name = models.CharField(max_length=120)
+    role = models.CharField(max_length=120)
+    photo = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    bio = models.TextField(blank=True, max_length=400)
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("role"),
+        FieldPanel("photo"),
+        FieldPanel("bio"),
+    ]
+
+    class Meta(Orderable.Meta):
+        verbose_name = "team member"
+
+    def __str__(self):
+        return self.name
+
+
+class Testimonial(models.Model):
+    """Something a client said. Chosen per page, so each page picks its own."""
+
+    quote = models.TextField(max_length=400)
+    author = models.CharField(max_length=120)
+    company = models.CharField(max_length=120, blank=True)
+
+    panels = [
+        FieldPanel("quote"),
+        FieldPanel("author"),
+        FieldPanel("company"),
+    ]
+
+    def __str__(self):
+        return f"{self.author}: {self.quote[:40]}"

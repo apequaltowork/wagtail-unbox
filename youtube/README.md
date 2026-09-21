@@ -15,6 +15,7 @@ tags, chapters, thumbnail, pinned comment.
 | [ep05/](ep05/README.md) | Ep 5 — StreamField, Properly |
 | [ep06/](ep06/README.md) | Ep 6 — Images & Documents |
 | [ep07/](ep07/README.md) | Ep 7 — Blog: Parent & Child Pages |
+| [ep08/](ep08/README.md) | Ep 8 — Snippets & Reusable Content |
 | [channel.md](channel.md) | Channel-level settings that apply to every upload |
 
 ## Published
@@ -30,6 +31,7 @@ tags, chapters, thumbnail, pinned comment.
 | 05 | StreamField, Properly | https://www.youtube.com/watch?v=8_wrJLU57Qw |
 | 06 | Images & Documents | https://www.youtube.com/watch?v=YYxtwAx4a0w |
 | 07 | Blog: Parent & Child Pages | https://www.youtube.com/watch?v=lvWFyLOHSBo |
+| 08 | Snippets & Reusable Content | https://www.youtube.com/watch?v=L9A5RAPO5uI |
 
 ## Titles
 

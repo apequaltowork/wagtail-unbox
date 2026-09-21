@@ -1,0 +1,9 @@
+{# A chosen snippet can be deleted later. Render nothing rather than an empty quote. #}
+{% with t=value.testimonial %}
+    {% if t %}
+        <blockquote>
+            <p>{{ t.quote }}</p>
+            <cite>{{ t.author }}{% if t.company %}, {{ t.company }}{% endif %}</cite>
+        </blockquote>
+    {% endif %}
+{% endwith %}

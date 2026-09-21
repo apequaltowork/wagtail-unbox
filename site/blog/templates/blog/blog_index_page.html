@@ -10,12 +10,23 @@
         <p class="intro">{{ page.intro }}</p>
     {% endif %}
 
+    {% if tag %}
+        <p class="filter">Posts tagged <strong>{{ tag }}</strong> &middot; <a href="{% pageurl page %}">show all</a></p>
+    {% endif %}
+
     <ol class="post-list">
         {% for post in posts %}
             <li>
                 <time datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date|date:"j F Y" }}</time>
                 <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
                 <p>{{ post.intro }}</p>
+                {% if post.tags.all %}
+                    <ul class="tags">
+                        {% for t in post.tags.all %}
+                            <li><a href="{% pageurl page %}?tag={{ t.slug }}">{{ t.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </li>
         {% empty %}
             <li>No posts yet.</li>
@@ -25,9 +36,9 @@
     {% if posts.paginator.num_pages > 1 %}
         <nav class="pagination" aria-label="Journal pages">
             {# Three fixed slots, so the counter never jumps sideways between pages. #}
-            <span class="prev">{% if posts.has_previous %}<a href="?page={{ posts.previous_page_number }}" rel="prev">&larr; Newer</a>{% endif %}</span>
+            <span class="prev">{% if posts.has_previous %}<a href="?{% if tag %}tag={{ tag|urlencode }}&amp;{% endif %}page={{ posts.previous_page_number }}" rel="prev">&larr; Newer</a>{% endif %}</span>
             <span class="count">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
-            <span class="next">{% if posts.has_next %}<a href="?page={{ posts.next_page_number }}" rel="next">Older &rarr;</a>{% endif %}</span>
+            <span class="next">{% if posts.has_next %}<a href="?{% if tag %}tag={{ tag|urlencode }}&amp;{% endif %}page={{ posts.next_page_number }}" rel="next">Older &rarr;</a>{% endif %}</span>
         </nav>
     {% endif %}
 {% endblock content %}

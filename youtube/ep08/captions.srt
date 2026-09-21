@@ -1,0 +1,287 @@
+1
+00:00:00,350 --> 00:00:03,550
+Snippets, and reusable content.
+
+2
+00:00:04,350 --> 00:00:07,008
+A team member does not have a URL.
+
+3
+00:00:07,008 --> 00:00:11,152
+A testimonial does not have a place in the page tree.
+
+4
+00:00:11,152 --> 00:00:15,843
+But both belong on pages, and usually on more than one page.
+
+5
+00:00:15,843 --> 00:00:17,875
+That is what a snippet is.
+
+6
+00:00:17,875 --> 00:00:22,488
+A plain Django model, that editors can manage in the admin.
+
+7
+00:00:23,288 --> 00:00:24,138
+Two models.
+
+8
+00:00:24,138 --> 00:00:26,689
+A team member, and a testimonial.
+
+9
+00:00:26,689 --> 00:00:29,085
+Neither one inherits from Page.
+
+10
+00:00:29,085 --> 00:00:34,650
+The team member inherits from Orderable, which adds a sort order column,
+
+11
+00:00:34,650 --> 00:00:38,978
+and that alone gives the admin drag and drop reordering.
+
+12
+00:00:39,778 --> 00:00:45,126
+And you register them with a snippet view set, which is the Wagtail seven way.
+
+13
+00:00:45,126 --> 00:00:48,554
+One class per model sets the icon, the menu label,
+
+14
+00:00:48,554 --> 00:00:51,502
+the listing columns and what is searchable.
+
+15
+00:00:51,502 --> 00:00:56,987
+A view set group puts both of them under a single Studio item in the admin menu,
+
+16
+00:00:56,987 --> 00:01:00,484
+instead of burying them in a generic snippets list.
+
+17
+00:01:01,284 --> 00:01:04,484
+There are two ways to put a snippet on a page.
+
+18
+00:01:04,484 --> 00:01:06,572
+Either the editor chooses one,
+
+19
+00:01:06,572 --> 00:01:11,024
+which is what the testimonial block does with a snippet chooser.
+
+20
+00:01:11,024 --> 00:01:13,320
+Or the block fetches them itself.
+
+21
+00:01:13,320 --> 00:01:15,894
+The team block has nothing to choose.
+
+22
+00:01:15,894 --> 00:01:20,208
+It loads every team member, so when somebody joins the studio,
+
+23
+00:01:20,208 --> 00:01:23,478
+every page showing the team updates on its own.
+
+24
+00:01:24,278 --> 00:01:30,155
+Blocks have a get context method as well, exactly like pages did last episode.
+
+25
+00:01:30,155 --> 00:01:35,504
+And notice the import is inside the method, not at the top of the file.
+
+26
+00:01:36,304 --> 00:01:41,395
+Because the models file imports the blocks file, to build the body field.
+
+27
+00:01:41,395 --> 00:01:44,812
+If the blocks file imported the models file back,
+
+28
+00:01:44,812 --> 00:01:48,438
+that is a circular import and Django will not start.
+
+29
+00:01:48,438 --> 00:01:51,995
+So the snippet chooser names its model as a string,
+
+30
+00:01:51,995 --> 00:01:56,458
+and the team block imports its model only when it actually runs.
+
+31
+00:01:57,258 --> 00:02:02,661
+Now, what happens when somebody deletes a testimonial that a page is using.
+
+32
+00:02:02,661 --> 00:02:05,615
+Before the delete, Wagtail already knows.
+
+33
+00:02:05,615 --> 00:02:09,721
+Its reference index says used one time, on the home page,
+
+34
+00:02:09,721 --> 00:02:13,467
+and the admin shows that on the confirmation screen.
+
+35
+00:02:13,467 --> 00:02:16,277
+After the delete, the page still loads.
+
+36
+00:02:16,277 --> 00:02:18,726
+But the block's value is now None,
+
+37
+00:02:18,726 --> 00:02:23,913
+and without a guard in the template you ship an empty, styled quote box.
+
+38
+00:02:23,913 --> 00:02:26,507
+Every chooser value can become None.
+
+39
+00:02:26,507 --> 00:02:28,380
+Write the template for it.
+
+40
+00:02:29,180 --> 00:02:30,904
+Now tags for the journal.
+
+41
+00:02:30,904 --> 00:02:34,905
+A small through model, and a taggable manager on the post.
+
+42
+00:02:34,905 --> 00:02:39,251
+The detail that matters is parental key instead of foreign key.
+
+43
+00:02:39,251 --> 00:02:43,321
+It means the tags are saved as part of the page's revision,
+
+44
+00:02:43,321 --> 00:02:48,494
+so an editor can change the tags on a draft without touching the live post.
+
+45
+00:02:49,294 --> 00:02:53,129
+Filtering by tag is four lines in get context.
+
+46
+00:02:53,129 --> 00:02:58,632
+And the last of those four lines matters a lot more than it looks.
+
+47
+00:02:58,632 --> 00:02:59,632
+Here is why.
+
+48
+00:03:00,432 --> 00:03:02,710
+Filter by the process tag.
+
+49
+00:03:02,710 --> 00:03:04,112
+Page one of two.
+
+50
+00:03:04,112 --> 00:03:05,163
+Click older.
+
+51
+00:03:05,163 --> 00:03:11,910
+The link is question mark page equals two, and it lands on page two of three.
+
+52
+00:03:11,910 --> 00:03:14,626
+That is the unfiltered journal.
+
+53
+00:03:14,626 --> 00:03:16,554
+The tag just vanished.
+
+54
+00:03:17,354 --> 00:03:21,830
+Last episode's pagination links replace the entire query string.
+
+55
+00:03:21,830 --> 00:03:24,487
+The moment you add a second parameter,
+
+56
+00:03:24,487 --> 00:03:28,962
+every link that builds a query string has to carry both of them.
+
+57
+00:03:28,962 --> 00:03:32,739
+Pass the tag back to the template, put it in the link,
+
+58
+00:03:32,739 --> 00:03:35,396
+and older now goes to page two of two.
+
+59
+00:03:36,196 --> 00:03:38,389
+And one small fix on the way.
+
+60
+00:03:38,389 --> 00:03:42,018
+The tag list inside each post is a list as well,
+
+61
+00:03:42,018 --> 00:03:46,706
+so the post row's border and padding landed on every tag pill.
+
+62
+00:03:46,706 --> 00:03:50,638
+One child selector instead of a descendant selector.
+
+63
+00:03:51,438 --> 00:03:52,671
+And here it is.
+
+64
+00:03:52,671 --> 00:03:58,920
+The team, on the About page, in the order set by dragging rows in the admin.
+
+65
+00:03:59,720 --> 00:04:05,594
+A testimonial on the home page, chosen by the editor from the snippet list.
+
+66
+00:04:06,394 --> 00:04:13,060
+And the journal, filtered by tag, with every post showing its own tags as links.
+
+67
+00:04:13,860 --> 00:04:16,374
+Commit, and tag.
+
+68
+00:04:17,174 --> 00:04:19,154
+Next episode, navigation.
+
+69
+00:04:19,154 --> 00:04:21,689
+A menu built from the page tree,
+
+70
+00:04:21,689 --> 00:04:26,600
+and footer and contact details the client can edit themselves.
+
+71
+00:04:27,400 --> 00:04:33,679
+Next episode, navigation and site settings.
+
+72
+00:04:33,679 --> 00:04:36,600
+Thanks for watching.

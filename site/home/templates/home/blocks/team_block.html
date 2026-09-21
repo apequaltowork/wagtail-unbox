@@ -1,0 +1,14 @@
+{% load wagtailimages_tags %}
+<h2>{{ value.heading }}</h2>
+<ul class="team-grid">
+    {% for member in members %}
+        <li>
+            {% if member.photo %}
+                {% image member.photo fill-240x240 alt="" %}
+            {% endif %}
+            <h3>{{ member.name }}</h3>
+            <p class="role">{{ member.role }}</p>
+            {% if member.bio %}<p>{{ member.bio }}</p>{% endif %}
+        </li>
+    {% endfor %}
+</ul>
