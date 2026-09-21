@@ -19,6 +19,7 @@ tags, chapters, thumbnail, pinned comment.
 | [ep09/](ep09/README.md) | Ep 9 — Navigation & Site Settings |
 | [ep10/](ep10/README.md) | Ep 10 — Forms That Work |
 | [ep11/](ep11/README.md) | Ep 11 — Search |
+| [ep12/](ep12/README.md) | Ep 12 — Editor Experience Polish |
 | [channel.md](channel.md) | Channel-level settings that apply to every upload |
 
 ## Published

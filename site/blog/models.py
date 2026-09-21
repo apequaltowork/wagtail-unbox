@@ -18,6 +18,8 @@ from home.models import HeroMixin
 class BlogIndexPage(Page):
     """The /blog/ page: lists its posts, newest first, a few at a time."""
 
+    page_description = "The journal's front page. Posts go underneath it."
+
     intro = models.CharField(max_length=250, blank=True)
 
     content_panels = Page.content_panels + [FieldPanel("intro")]
@@ -69,6 +71,8 @@ class BlogPageTag(TaggedItemBase):
 
 class BlogPage(HeroMixin, Page):
     """One post."""
+
+    page_description = "A journal post. Can only be added inside the Journal."
 
     date = models.DateField("Post date", default=timezone.localdate)
     intro = models.CharField(

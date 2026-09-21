@@ -1,0 +1,295 @@
+1
+00:00:00,350 --> 00:00:03,550
+The editor experience.
+
+2
+00:00:04,350 --> 00:00:08,600
+Every episode so far, we have been logged in as a superuser.
+
+3
+00:00:08,600 --> 00:00:10,229
+The client will not be.
+
+4
+00:00:10,229 --> 00:00:14,124
+So this episode starts by creating a user called Casey,
+
+5
+00:00:14,124 --> 00:00:17,524
+putting them in Wagtail's default editors group,
+
+6
+00:00:17,524 --> 00:00:20,640
+and looking at the admin through their eyes.
+
+7
+00:00:21,440 --> 00:00:22,208
+Pages work.
+
+8
+00:00:22,208 --> 00:00:27,932
+But the team, the testimonials and the studio settings all bounce straight back to
+
+9
+00:00:27,932 --> 00:00:31,632
+the dashboard, and the menu items are not even there.
+
+10
+00:00:31,632 --> 00:00:35,750
+We spent two episodes building those things for the client,
+
+11
+00:00:35,750 --> 00:00:38,543
+and the client can not open any of them.
+
+12
+00:00:38,543 --> 00:00:42,940
+The default editors group can edit pages, images and documents,
+
+13
+00:00:42,940 --> 00:00:44,546
+and nothing we defined.
+
+14
+00:00:45,346 --> 00:00:49,178
+You could fix it by clicking in the groups screen.
+
+15
+00:00:49,178 --> 00:00:51,017
+That fixes one database.
+
+16
+00:00:51,017 --> 00:00:55,844
+Put it in a data migration and it fixes every copy of the site.
+
+17
+00:00:55,844 --> 00:00:59,370
+A colleague's laptop, staging, and production.
+
+18
+00:00:59,370 --> 00:01:02,128
+The obvious version looks like this.
+
+19
+00:01:02,128 --> 00:01:05,500
+Find the permissions, add them to the group.
+
+20
+00:01:06,300 --> 00:01:08,775
+Run it on a fresh database.
+
+21
+00:01:08,775 --> 00:01:09,234
+Okay.
+
+22
+00:01:09,234 --> 00:01:11,984
+The editors group got nothing.
+
+23
+00:01:11,984 --> 00:01:17,118
+And yet, ask whether the permissions exist, and they do.
+
+24
+00:01:17,918 --> 00:01:23,697
+Django creates permission rows in a signal that runs after every migration has
+
+25
+00:01:23,697 --> 00:01:24,363
+finished.
+
+26
+00:01:24,363 --> 00:01:29,253
+On a fresh database they do not exist yet when our migration runs.
+
+27
+00:01:29,253 --> 00:01:33,180
+So the filter finds nothing, the migration says okay,
+
+28
+00:01:33,180 --> 00:01:38,069
+and a moment later the permissions appear, so nothing looks wrong.
+
+29
+00:01:38,069 --> 00:01:39,403
+Create them first.
+
+30
+00:01:39,403 --> 00:01:40,810
+And the nasty part.
+
+31
+00:01:40,810 --> 00:01:44,589
+On my existing database, the broken version worked.
+
+32
+00:01:44,589 --> 00:01:47,552
+It would only have failed in production.
+
+33
+00:01:48,352 --> 00:01:52,350
+Fixed, and tested on a fresh database this time.
+
+34
+00:01:52,350 --> 00:01:57,514
+All seven permissions, and Casey can open everything we built.
+
+35
+00:01:58,314 --> 00:02:00,876
+Now a bug we wrote ourselves.
+
+36
+00:02:00,876 --> 00:02:04,321
+The contact page has two preview modes.
+
+37
+00:02:04,321 --> 00:02:06,352
+The form previews fine.
+
+38
+00:02:06,352 --> 00:02:09,444
+The landing page preview redirects.
+
+39
+00:02:10,244 --> 00:02:14,507
+In episode ten, we turned render landing page into a redirect,
+
+40
+00:02:14,507 --> 00:02:16,364
+to fix the refresh problem.
+
+41
+00:02:16,364 --> 00:02:19,183
+Wagtail's preview calls that same method.
+
+42
+00:02:19,183 --> 00:02:22,553
+So the preview jumped to the live thank you page,
+
+43
+00:02:22,553 --> 00:02:27,985
+and an editor rewriting the thank you message would only ever see the published
+
+44
+00:02:27,985 --> 00:02:28,535
+version.
+
+45
+00:02:28,535 --> 00:02:31,423
+Render the template directly for previews.
+
+46
+00:02:31,423 --> 00:02:36,374
+I checked it against an unpublished draft, and the draft text now shows.
+
+47
+00:02:37,174 --> 00:02:39,374
+Now something for the client.
+
+48
+00:02:39,374 --> 00:02:43,243
+The newest enquiries, right on the admin dashboard.
+
+49
+00:02:43,243 --> 00:02:48,553
+A small component, registered with the construct homepage panels hook.
+
+50
+00:02:48,553 --> 00:02:53,560
+Homepage here means the admin's own front page, not the website's.
+
+51
+00:02:54,360 --> 00:02:57,386
+The important line is get forms for user.
+
+52
+00:02:57,386 --> 00:03:02,108
+It applies exactly the same permission rule as the forms screen.
+
+53
+00:03:02,108 --> 00:03:03,732
+I checked three users.
+
+54
+00:03:03,732 --> 00:03:06,536
+The superuser and Casey see the panel.
+
+55
+00:03:06,536 --> 00:03:09,488
+A user who can only log in sees nothing.
+
+56
+00:03:09,488 --> 00:03:15,096
+If you queried every submission instead, the dashboard would show enquiries,
+
+57
+00:03:15,096 --> 00:03:18,786
+names and email addresses, to anyone with a login.
+
+58
+00:03:19,586 --> 00:03:22,131
+And here is Casey's dashboard.
+
+59
+00:03:22,131 --> 00:03:27,644
+Studio and Settings in the menu, and recent enquiries at the top.
+
+60
+00:03:28,444 --> 00:03:31,408
+Every page type now has a page description,
+
+61
+00:03:31,408 --> 00:03:35,681
+which Wagtail shows when an editor chooses between page types.
+
+62
+00:03:35,681 --> 00:03:40,712
+And then I went to add a page under Home, and the chooser never appeared.
+
+63
+00:03:40,712 --> 00:03:44,917
+The journal and the contact page are both at their max count,
+
+64
+00:03:44,917 --> 00:03:49,604
+so only one type is allowed, and Wagtail skips straight to the form.
+
+65
+00:03:49,604 --> 00:03:52,774
+That is episode seven's rules doing their job.
+
+66
+00:03:53,574 --> 00:03:59,185
+And every piece of help text we have written since episode three is right there,
+
+67
+00:03:59,185 --> 00:04:00,307
+under its field.
+
+68
+00:04:00,307 --> 00:04:03,744
+Including the alt text guidance from episode six.
+
+69
+00:04:04,544 --> 00:04:07,058
+Commit, and tag.
+
+70
+00:04:07,858 --> 00:04:10,776
+Next episode, production settings.
+
+71
+00:04:10,776 --> 00:04:14,467
+Postgres, environment variables, debug off,
+
+72
+00:04:14,467 --> 00:04:18,244
+and the checklist Django already ships with.
+
+73
+00:04:19,044 --> 00:04:24,837
+Next episode, production settings.
+
+74
+00:04:24,837 --> 00:04:28,244
+Thanks for watching.

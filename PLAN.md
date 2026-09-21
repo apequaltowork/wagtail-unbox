@@ -80,7 +80,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 ### Act 3 — Shipping
 | # | Title | Covers |
 |---|---|---|
-| 12 | Editor Experience Polish | `wagtail_hooks.py`, panels, help text, previews |
+| 12 | Editor Experience Polish | 🎬 **Rendered** — Editors permissions migration, `create_permissions`, preview fix, dashboard panel |
 | 13 | Production Settings | Postgres, env vars, static/media, security checklist |
 | 14 | Deploy It | Target TBD (Fly.io / Railway / VPS), domain, media storage |
 
@@ -195,13 +195,14 @@ ran, or it will lie on camera.
 - Ep 9 rendered (4:17), `ep09-end` tagged — awaiting upload
 - Ep 10 rendered (4:05), `ep10-end` tagged — awaiting upload
 - Ep 11 rendered (3:50), `ep11-end` tagged — awaiting upload
+- Ep 12 rendered (4:26), `ep12-end` tagged — awaiting upload
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 12 — Editor Experience Polish: `wagtail_hooks`, panels, help text, previews
+1. Ep 13 — Production Settings: Postgres, env vars, `DEBUG=False`, static/media, `check --deploy`
 2. Ep 14 stays on hold until the host is decided
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then

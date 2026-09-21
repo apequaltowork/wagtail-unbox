@@ -1,0 +1,21 @@
+{% load wagtailadmin_tags %}
+{% if submissions %}
+    {% panel id="recent-enquiries" heading="Recent enquiries" classname="w-panel--dashboard" %}
+        <table class="listing listing--dashboard">
+            <thead class="w-sr-only">
+                <tr><th>From</th><th>Message</th><th>Received</th></tr>
+            </thead>
+            <tbody>
+                {% for s in submissions %}
+                    <tr>
+                        <td class="title">
+                            <a href="{% url 'wagtailforms:list_submissions' s.page_id %}">{{ s.form_data.your_name|default:"(no name)" }}</a>
+                        </td>
+                        <td>{{ s.form_data.about_the_project|truncatechars:70 }}</td>
+                        <td>{% timesince_last_update s.submit_time %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endpanel %}
+{% endif %}

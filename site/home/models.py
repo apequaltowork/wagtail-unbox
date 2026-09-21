@@ -88,6 +88,8 @@ class HomePage(HeroMixin, Page):
 class StandardPage(HeroMixin, Page):
     """A plain content page: About, Services, anything that is mostly words."""
 
+    page_description = "A general page: About, Services -- anything that is mostly words."
+
     intro = models.CharField(
         max_length=250,
         blank=True,
@@ -237,6 +239,7 @@ class ContactPage(AbstractEmailForm):
 
     HONEYPOT = "website"
     form_builder = StudioFormBuilder
+    page_description = "The contact form. Only one is allowed, directly under the homepage."
 
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
@@ -274,12 +277,23 @@ class ContactPage(AbstractEmailForm):
             return None
         return super().process_form_submission(form)
 
+    def landing_response(self, request):
+        return TemplateResponse(
+            request, self.get_landing_page_template(request), self.get_context(request)
+        )
+
     def render_landing_page(self, request, form_submission=None, *args, **kwargs):
         return redirect(self.url + "?sent=1")
 
     def serve(self, request, *args, **kwargs):
         if request.method == "GET" and request.GET.get("sent"):
-            return TemplateResponse(
-                request, self.get_landing_page_template(request), self.get_context(request)
-            )
+            return self.landing_response(request)
         return super().serve(request, *args, **kwargs)
+
+    def serve_preview(self, request, mode_name):
+        # The stock "Landing page" preview calls render_landing_page -- which
+        # we turned into a redirect to the *live* page, so an editor previewing
+        # a new thank-you message would see the published one. Render the draft.
+        if mode_name == "landing":
+            return self.landing_response(request)
+        return super().serve_preview(request, mode_name)
