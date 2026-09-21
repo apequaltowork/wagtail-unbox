@@ -48,9 +48,12 @@ EXPOSE 8000
 # 2. Set PORT variable that is used by Gunicorn. This should match "EXPOSE"
 #    command.
 # 3. Add the virtual environment to PATH.
+# 4. Use the production settings. Without this line the container runs
+#    studio.settings.dev: DEBUG on, any host, and the SECRET_KEY that is in git.
 ENV PYTHONUNBUFFERED=1 \
     PORT=8000 \
-    PATH="/opt/venv/bin:$PATH"
+    PATH="/opt/venv/bin:$PATH" \
+    DJANGO_SETTINGS_MODULE=studio.settings.production
 
 
 
@@ -71,8 +74,11 @@ COPY --chown=wagtail:wagtail . .
 # Use user "wagtail" to run the build commands below and the server itself.
 USER wagtail
 
-# Collect static files.
-RUN python manage.py collectstatic --noinput --clear
+# Collect static files. Production settings demand a secret key and a host, and
+# collectstatic needs neither -- so give it throwaway values for this one step.
+# The real ones are supplied when the container runs, never baked into the image.
+RUN DJANGO_SECRET_KEY=collectstatic-only DJANGO_ALLOWED_HOSTS=localhost \
+    python manage.py collectstatic --noinput --clear
 
 # Runtime command that executes when "docker run" is called, it does the
 # following:

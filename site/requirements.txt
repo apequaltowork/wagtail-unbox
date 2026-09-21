@@ -1,2 +1,12 @@
-Django>=6,<6.1
-wagtail>=7.4,<7.5
+# What the Dockerfile installs. Kept identical to ../requirements.txt.
+#
+# `wagtail start` generated "Django>=6,<6.1" here, while the project runs on
+# 6.1.1 -- so a production image would have been built on a different Django
+# than every episode was developed and tested on.
+wagtail==7.4.3
+Django==6.1.1
+
+# Production (episode 13)
+whitenoise==6.12.0
+dj-database-url==3.1.2
+psycopg[binary]==3.3.6

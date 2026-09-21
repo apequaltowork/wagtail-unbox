@@ -28,3 +28,7 @@ video/out/
 
 # local tooling
 .claude/
+
+# collectstatic output (STATIC_ROOT) -- generated on every deploy, never committed.
+# Anchored, so site/studio/static/ (the real source files) is still tracked.
+/site/static/

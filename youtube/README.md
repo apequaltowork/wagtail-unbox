@@ -20,6 +20,7 @@ tags, chapters, thumbnail, pinned comment.
 | [ep10/](ep10/README.md) | Ep 10 — Forms That Work |
 | [ep11/](ep11/README.md) | Ep 11 — Search |
 | [ep12/](ep12/README.md) | Ep 12 — Editor Experience Polish |
+| [ep13/](ep13/README.md) | Ep 13 — Production Settings |
 | [channel.md](channel.md) | Channel-level settings that apply to every upload |
 
 ## Published
@@ -93,15 +94,29 @@ Rendered by `python video/cards.py`, output in `youtube/epNN/assets/`:
 - `assets/thumb.png` — 1280x720 thumbnail to upload
 - `assets/end.png` — 1920x1080 closing frame (already burned in)
 
+## Transcripts and captions
+
+Every episode folder has two files made from the render's own subtitle timings:
+
+| File | What it is | Where it goes |
+|---|---|---|
+| `captions.srt` | Short, timed caption lines with written spellings | YouTube Studio → Subtitles |
+| `transcript.md` | The narration as readable text, one timestamped paragraph per scene | Linked from the video description; readable on GitHub |
+
+Regenerate after any re-render: `python video/transcripts.py` (or `… ep05` for one).
+The narration is written for the voice — "U R L", "four oh four", "manage dot py" —
+and the script turns those back into written form.
+
 ## Upload checklist
 
 1. Render the episode: `python video/build.py epNN`
 2. Upload the MP4 from `youtube/epNN/out/epNN.mp4`
 3. Title + description + tags — paste from this folder's `epNN.md`
 4. Upload `assets/thumb.png` as the custom thumbnail
-5. Upload `youtube/epNN/out/epNN.srt` as subtitles — **do this, it is the single
+5. Upload `youtube/epNN/captions.srt` as subtitles — **do this, it is the single
    cheapest win available.** Auto-captions mangle "Wagtail", "StreamField" and
-   "treebeard" in exactly the words people search for
+   "treebeard" in exactly the words people search for. Use `captions.srt`, not
+   `out/epNN.srt`: it has short lines and written spellings (URL, not "U R L")
 6. Add to the **Wagtail Unboxed** playlist
 7. Set category, language, audience (table above)
 8. Add end screen elements over the last ~7 seconds — the end card leaves its right

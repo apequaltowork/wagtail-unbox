@@ -1,0 +1,399 @@
+1
+00:00:00,350 --> 00:00:03,550
+Production settings.
+
+2
+00:00:04,350 --> 00:00:08,225
+Here is what wagtail start gave us for production.
+
+3
+00:00:08,225 --> 00:00:10,627
+Debug off, one storage setting,
+
+4
+00:00:10,627 --> 00:00:15,199
+and an import of a local settings file that does not exist.
+
+5
+00:00:15,199 --> 00:00:18,221
+Django's deploy check finds six issues.
+
+6
+00:00:18,221 --> 00:00:20,856
+And there is no secret key at all.
+
+7
+00:00:21,656 --> 00:00:24,949
+And before any of that, the biggest one.
+
+8
+00:00:24,949 --> 00:00:31,122
+The Dockerfile that wagtail start generates runs gunicorn on the WSGI file,
+
+9
+00:00:31,122 --> 00:00:34,168
+and never says which settings to use.
+
+10
+00:00:34,168 --> 00:00:37,954
+So I loaded it exactly the way gunicorn would.
+
+11
+00:00:37,954 --> 00:00:39,683
+Development settings.
+
+12
+00:00:39,683 --> 00:00:40,423
+Debug on.
+
+13
+00:00:40,423 --> 00:00:41,164
+Any host.
+
+14
+00:00:41,164 --> 00:00:44,786
+And the secret key that is committed to git.
+
+15
+00:00:45,586 --> 00:00:51,146
+Deployed as generated, any error on the live site shows a full traceback,
+
+16
+00:00:51,146 --> 00:00:53,355
+settings included, to anyone.
+
+17
+00:00:53,355 --> 00:00:59,676
+So the WSGI file now defaults to production, and the Dockerfile says so explicitly.
+
+18
+00:00:59,676 --> 00:01:03,408
+And production refuses to start without a secret.
+
+19
+00:01:03,408 --> 00:01:08,740
+If something is missing, the server stops, with a message saying what.
+
+20
+00:01:08,740 --> 00:01:10,492
+That is failing closed.
+
+21
+00:01:10,492 --> 00:01:16,204
+manage.py still defaults to development, so nothing changes on your laptop.
+
+22
+00:01:17,004 --> 00:01:22,348
+Everything secret or host specific now comes from environment variables,
+
+23
+00:01:22,348 --> 00:01:27,247
+so nothing sensitive is in git and the same code runs on any host.
+
+24
+00:01:27,247 --> 00:01:28,509
+Two are required.
+
+25
+00:01:28,509 --> 00:01:31,329
+The secret key, and the allowed hosts.
+
+26
+00:01:31,329 --> 00:01:37,119
+An empty hosts list would start perfectly happily and then answer every single
+
+27
+00:01:37,119 --> 00:01:40,830
+request with a 400, so we refuse to start instead.
+
+28
+00:01:41,630 --> 00:01:43,826
+The database is one variable.
+
+29
+00:01:43,826 --> 00:01:44,811
+Database URL.
+
+30
+00:01:44,811 --> 00:01:50,264
+Set it to a Postgres address and it parses to Django's Postgres backend.
+
+31
+00:01:50,264 --> 00:01:53,975
+Leave it unset and you get the local SQLite file,
+
+32
+00:01:53,975 --> 00:01:59,958
+which means you can try these production settings on a laptop before any server
+
+33
+00:01:59,958 --> 00:02:00,488
+exists.
+
+34
+00:02:01,288 --> 00:02:06,017
+Point it at Postgres, and it fails before it even tries to connect.
+
+35
+00:02:06,017 --> 00:02:10,816
+On Postgres, Wagtail's search switches to Postgres full text search,
+
+36
+00:02:10,816 --> 00:02:14,133
+and that needs Django's Postgres app installed.
+
+37
+00:02:14,133 --> 00:02:16,815
+So add it when the engine is Postgres.
+
+38
+00:02:16,815 --> 00:02:19,850
+And while testing with no server listening,
+
+39
+00:02:19,850 --> 00:02:23,449
+a wrong address took more than two minutes to fail.
+
+40
+00:02:23,449 --> 00:02:28,954
+A ten second connect timeout, and the same mistake shows up in twelve seconds.
+
+41
+00:02:29,754 --> 00:02:36,966
+Now run the site with production settings, before collecting static files.
+
+42
+00:02:36,966 --> 00:02:38,818
+The home page, 500.
+
+43
+00:02:38,818 --> 00:02:40,864
+The admin login, 500.
+
+44
+00:02:40,864 --> 00:02:43,496
+Even the 404 page is a 500.
+
+45
+00:02:43,496 --> 00:02:47,004
+Missing static files manifest entry.
+
+46
+00:02:47,804 --> 00:02:53,961
+The manifest storage will not render a static tag for any file it has not seen.
+
+47
+00:02:53,961 --> 00:02:58,404
+So without collect static, every page on the site breaks,
+
+48
+00:02:58,404 --> 00:03:02,690
+including the admin login you would use to investigate.
+
+49
+00:03:02,690 --> 00:03:03,860
+Collect static.
+
+50
+00:03:03,860 --> 00:03:06,354
+Two hundred and seventeen files.
+
+51
+00:03:06,354 --> 00:03:11,030
+And now everything is 200, and a missing page is a real 404.
+
+52
+00:03:11,830 --> 00:03:16,167
+Which means, back in episode four, I promised this.
+
+53
+00:03:16,167 --> 00:03:23,056
+The 404 template that extends our base, finally showing up, because debug is off.
+
+54
+00:03:23,856 --> 00:03:27,555
+With debug off, Django stops serving static files,
+
+55
+00:03:27,555 --> 00:03:30,514
+so without help the stylesheet is a 404.
+
+56
+00:03:30,514 --> 00:03:34,509
+White noise serves it from the app itself, compressed.
+
+57
+00:03:34,509 --> 00:03:36,432
+And look at the file name.
+
+58
+00:03:36,432 --> 00:03:41,611
+It has a hash in it, so the browser is told to cache it for ten years.
+
+59
+00:03:41,611 --> 00:03:44,274
+Change the CSS and the hash changes.
+
+60
+00:03:44,274 --> 00:03:50,192
+That is the permanent fix for the cache trap that cost us ten minutes in episode
+
+61
+00:03:50,192 --> 00:03:50,562
+four.
+
+62
+00:03:51,362 --> 00:03:53,022
+But look at the hero.
+
+63
+00:03:53,022 --> 00:03:53,575
+Broken.
+
+64
+00:03:53,575 --> 00:04:00,215
+Uploaded images are media, not static files, and with debug off nothing serves them.
+
+65
+00:04:00,215 --> 00:04:02,903
+White noise deliberately does not.
+
+66
+00:04:02,903 --> 00:04:08,120
+You can see the alt text from episode six doing its job, at least.
+
+67
+00:04:08,120 --> 00:04:14,444
+How media is served depends on the host, so that is decided in the next episode.
+
+68
+00:04:15,244 --> 00:04:16,077
+And HTTPS.
+
+69
+00:04:16,077 --> 00:04:22,490
+The host terminates the encryption and forwards plain requests with a header,
+
+70
+00:04:22,490 --> 00:04:24,988
+so Django is told to trust it.
+
+71
+00:04:24,988 --> 00:04:27,071
+Plain HTTP now redirects.
+
+72
+00:04:27,071 --> 00:04:31,235
+A request for somebody else's hostname is refused.
+
+73
+00:04:31,235 --> 00:04:33,234
+Cookies are secure only.
+
+74
+00:04:33,234 --> 00:04:35,566
+And HSTS starts at one hour.
+
+75
+00:04:35,566 --> 00:04:38,064
+It is a promise browsers keep.
+
+76
+00:04:38,064 --> 00:04:41,396
+Set a year, then break your certificate,
+
+77
+00:04:41,396 --> 00:04:45,643
+and nobody can reach the site until the year is up.
+
+78
+00:04:45,643 --> 00:04:48,142
+Raise it once HTTPS is proven.
+
+79
+00:04:48,942 --> 00:04:50,688
+Django's deploy check.
+
+80
+00:04:50,688 --> 00:04:56,880
+Six issues down to two, and both of those are about committing harder to HSTS,
+
+81
+00:04:56,880 --> 00:05:01,008
+which we are not doing until the real domain exists.
+
+82
+00:05:01,808 --> 00:05:04,495
+And one more from the generated files.
+
+83
+00:05:04,495 --> 00:05:10,009
+The requirements file that the Dockerfile installs still caps Django below six
+
+84
+00:05:10,009 --> 00:05:10,716
+point one.
+
+85
+00:05:10,716 --> 00:05:14,180
+Every episode has run on six point one point one.
+
+86
+00:05:14,180 --> 00:05:19,695
+So a production image would have been a different Django from anything we ever
+
+87
+00:05:19,695 --> 00:05:20,190
+tested.
+
+88
+00:05:20,190 --> 00:05:24,290
+Both requirements files now pin exactly the same versions.
+
+89
+00:05:25,090 --> 00:05:27,089
+And to be straight about it.
+
+90
+00:05:27,089 --> 00:05:29,445
+The Postgres address, the driver,
+
+91
+00:05:29,445 --> 00:05:33,086
+the system checks and the timeout are all verified.
+
+92
+00:05:33,086 --> 00:05:35,513
+A live Postgres connection is not,
+
+93
+00:05:35,513 --> 00:05:39,226
+because there is no database server on this machine,
+
+94
+00:05:39,226 --> 00:05:42,153
+and neither is building the Docker image.
+
+95
+00:05:42,153 --> 00:05:45,580
+Both happen against the real host, next episode.
+
+96
+00:05:46,380 --> 00:05:48,894
+Commit, and tag.
+
+97
+00:05:49,694 --> 00:05:52,140
+Next episode, the last one.
+
+98
+00:05:52,140 --> 00:05:58,664
+A real host, a real database, media that works, and the first live edit.
+
+99
+00:05:59,464 --> 00:06:04,749
+Next episode, we deploy it.
+
+100
+00:06:04,749 --> 00:06:08,664
+Thanks for watching.

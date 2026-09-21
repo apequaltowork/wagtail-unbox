@@ -72,7 +72,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 | 05 | StreamField, Properly | ✅ **Published** — `StructBlock`, `ListBlock`, block templates, and the JSON_VALID migration |
 | 06 | Images & Documents | ✅ **Published** — renditions, focal points, `ImageBlock`, and the stale-rendition bug |
 | 07 | Blog: Parent & Child Pages | ✅ **Published** — a `blog` app, page-type rules, `child_of`, pagination |
-| 08 | Snippets & Reusable Content | 🎬 **Rendered** — team and testimonial snippets, `SnippetViewSet`, tags, filter-safe pagination |
+| 08 | Snippets & Reusable Content | ✅ **Published** — team and testimonial snippets, `SnippetViewSet`, tags, filter-safe pagination |
 | 09 | Navigation & Site Settings | 🎬 **Rendered** — menu from the tree, `show_in_menus`, `BaseSiteSetting` footer |
 | 10 | Forms That Work | 🎬 **Rendered** — `AbstractEmailForm` contact page, Post/Redirect/Get, honeypot, blank dropdown choice |
 | 11 | Search | 🎬 **Rendered** — `search_fields`, `update_index`, snippet text in the index, `.public()` |
@@ -81,7 +81,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 | # | Title | Covers |
 |---|---|---|
 | 12 | Editor Experience Polish | 🎬 **Rendered** — Editors permissions migration, `create_permissions`, preview fix, dashboard panel |
-| 13 | Production Settings | Postgres, env vars, static/media, security checklist |
+| 13 | Production Settings | 🎬 **Rendered** — env-driven settings, fail-closed WSGI, WhiteNoise, `DATABASE_URL`, `check --deploy` 6 → 2 |
 | 14 | Deploy It | Target TBD (Fly.io / Railway / VPS), domain, media storage |
 
 Titles after the last published episode may still shift. If ep 5 needs to split, it splits.
@@ -191,26 +191,26 @@ ran, or it will lie on camera.
 - Ep 5 **published**: https://www.youtube.com/watch?v=8_wrJLU57Qw
 - Ep 6 **published**: https://www.youtube.com/watch?v=YYxtwAx4a0w
 - Ep 7 **published**: https://www.youtube.com/watch?v=lvWFyLOHSBo
-- Ep 8 rendered (4:37), `ep08-end` tagged — awaiting upload
+- Ep 8 **published**: https://www.youtube.com/watch?v=L9A5RAPO5uI
 - Ep 9 rendered (4:17), `ep09-end` tagged — awaiting upload
 - Ep 10 rendered (4:05), `ep10-end` tagged — awaiting upload
 - Ep 11 rendered (3:50), `ep11-end` tagged — awaiting upload
 - Ep 12 rendered (4:26), `ep12-end` tagged — awaiting upload
+- Ep 13 rendered (6:06), `ep13-end` tagged — awaiting upload
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 13 — Production Settings: Postgres, env vars, `DEBUG=False`, static/media, `check --deploy`
-2. Ep 14 stays on hold until the host is decided
+1. Eps 8–13 rendered — upload in order, then record each URL
+2. Ep 14 — Deploy It: on hold until the host is chosen; first live Postgres connection and Docker build happen there
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then
 real captured output appears. Every code episode from here uses it.
 
-**Deferred to the end of the series**
-- Transcripts: one committed `transcript.md` per episode, generated from `scenes.py`,
-  plus the `.srt` files — all episodes in one pass after ep 14
+**Transcripts** — done for eps 0a–13: `transcript.md` and `captions.srt` in every episode
+folder, from `python video/transcripts.py`. Run it again for ep 14 once it is rendered.
 
 **Open questions**
 - Deploy target for ep 14 — decide during ep 13
@@ -257,5 +257,14 @@ Each of these cost real time and is worth not rediscovering.
   `FieldError`. Query the subclass: `BlogPage.objects.child_of(self)`.
 - **Never name a scratch script after a stdlib module.** `types.py` in the temp dir broke
   `import django` with a circular-import error.
+- **The generated Dockerfile runs dev settings.** `gunicorn studio.wsgi` with no
+  `DJANGO_SETTINGS_MODULE`, and `wsgi.py` defaults to dev — DEBUG on, any host, the committed
+  SECRET_KEY. `wsgi.py` now defaults to production, which refuses to start without a secret.
+- **A permissions data migration grants nothing on a fresh database** — permissions are created
+  in `post_migrate`. It says OK. Call `create_permissions` first, and test on a fresh DB.
+- **Chrome headless has a minimum window width** of about 500px; a 390px screenshot is clipped,
+  not a real layout bug. Check phone widths in the browser pane's mobile emulation instead.
+- **A new templatetags module needs a runserver restart** — the autoreloader only watches
+  modules that are already imported.
 - **A screenshot slide has a height budget.** A tall page capture scaled to full slide width
   runs off the bottom of the frame. Hold shots to ~78% width, or crop to roughly 2:1.
