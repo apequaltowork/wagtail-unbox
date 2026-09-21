@@ -1,0 +1,255 @@
+1
+00:00:00,350 --> 00:00:03,550
+Search.
+
+2
+00:00:04,350 --> 00:00:08,554
+Back in episode two we unboxed an app called search.
+
+3
+00:00:08,554 --> 00:00:14,778
+A view, a template and a URL, all generated for us, and untouched ever since.
+
+4
+00:00:14,778 --> 00:00:17,041
+It does work out of the box.
+
+5
+00:00:17,041 --> 00:00:20,760
+Today we find four ways it does not work well.
+
+6
+00:00:21,560 --> 00:00:26,522
+Search for a word in a post's title, and it is found.
+
+7
+00:00:26,522 --> 00:00:28,770
+A phrase from the intro.
+
+8
+00:00:28,770 --> 00:00:29,519
+Nothing.
+
+9
+00:00:29,519 --> 00:00:31,485
+A word from the body.
+
+10
+00:00:31,485 --> 00:00:32,234
+Nothing.
+
+11
+00:00:33,034 --> 00:00:36,533
+Because the page class only indexes the title.
+
+12
+00:00:36,533 --> 00:00:40,412
+Every other field has to be named in search fields.
+
+13
+00:00:40,412 --> 00:00:46,041
+Intro and body as search fields, and the date as a filter field for later.
+
+14
+00:00:46,041 --> 00:00:49,996
+It is not a schema change, so there is no migration.
+
+15
+00:00:50,796 --> 00:00:52,502
+Fields added.
+
+16
+00:00:52,502 --> 00:00:54,208
+Search again.
+
+17
+00:00:54,208 --> 00:00:56,046
+Still nothing.
+
+18
+00:00:56,846 --> 00:01:02,543
+The search index holds whatever was written when each page was last saved,
+
+19
+00:01:02,543 --> 00:01:06,162
+and changing search fields does not rewrite it.
+
+20
+00:01:06,162 --> 00:01:08,086
+Update index rebuilds it.
+
+21
+00:01:08,086 --> 00:01:09,395
+Nineteen objects.
+
+22
+00:01:09,395 --> 00:01:11,474
+And now the intro is found.
+
+23
+00:01:11,474 --> 00:01:16,016
+From here on, publishing a page reindexes it automatically.
+
+24
+00:01:16,816 --> 00:01:18,984
+Now try a team member's name.
+
+25
+00:01:18,984 --> 00:01:21,899
+Priya is right there on the About page.
+
+26
+00:01:21,899 --> 00:01:23,469
+Search finds nothing.
+
+27
+00:01:23,469 --> 00:01:26,609
+Same for the testimonial on the home page.
+
+28
+00:01:26,609 --> 00:01:30,720
+The team block fetches its names when the page renders,
+
+29
+00:01:30,720 --> 00:01:34,010
+and the testimonial block only stores an id.
+
+30
+00:01:34,010 --> 00:01:38,794
+So when the page is indexed, that text simply is not part of it.
+
+31
+00:01:39,594 --> 00:01:42,263
+Blocks have a method for exactly this.
+
+32
+00:01:42,263 --> 00:01:47,812
+Get searchable content returns the words that should be indexed for this block.
+
+33
+00:01:47,812 --> 00:01:52,519
+Return the quote and the author, do the same for the team, reindex,
+
+34
+00:01:52,519 --> 00:01:54,977
+and now Priya finds the About page.
+
+35
+00:01:54,977 --> 00:01:56,452
+The honest trade off.
+
+36
+00:01:56,452 --> 00:02:01,721
+Those words are copied into the page's index entry, so if the team changes,
+
+37
+00:02:01,721 --> 00:02:06,708
+the About page is stale until someone saves it or you run update index.
+
+38
+00:02:07,508 --> 00:02:09,249
+And this one matters.
+
+39
+00:02:09,249 --> 00:02:13,478
+I password protected the pricing post and searched.
+
+40
+00:02:13,478 --> 00:02:17,540
+The query in the generated view still returns it.
+
+41
+00:02:17,540 --> 00:02:19,862
+Add public, and it does not.
+
+42
+00:02:20,662 --> 00:02:25,600
+The view that Wagtail generates uses live, and live means published.
+
+43
+00:02:25,600 --> 00:02:28,286
+It does not mean visible to everyone.
+
+44
+00:02:28,286 --> 00:02:34,241
+So the title of every private page on your site shows up in search results for any
+
+45
+00:02:34,241 --> 00:02:34,822
+visitor.
+
+46
+00:02:34,822 --> 00:02:35,620
+Add public.
+
+47
+00:02:35,620 --> 00:02:38,307
+And add specific while you are there,
+
+48
+00:02:38,307 --> 00:02:42,664
+so each result is its real page type and can show its intro.
+
+49
+00:02:43,464 --> 00:02:45,390
+So the view becomes this.
+
+50
+00:02:45,390 --> 00:02:50,858
+Strip the query, search only public live pages as their specific types,
+
+51
+00:02:50,858 --> 00:02:56,250
+and paginate with get page, exactly like the journal in episode seven.
+
+52
+00:02:57,050 --> 00:03:01,623
+The template gets a properly labelled search box, a result count,
+
+53
+00:03:01,623 --> 00:03:04,507
+each result's page type, title and intro,
+
+54
+00:03:04,507 --> 00:03:07,884
+and pagination links that carry the query along,
+
+55
+00:03:07,884 --> 00:03:10,628
+which is the lesson from episode eight.
+
+56
+00:03:11,428 --> 00:03:14,981
+And here it is, with search in the menu.
+
+57
+00:03:14,981 --> 00:03:19,510
+Handover finds nine pages, across three page types.
+
+58
+00:03:20,310 --> 00:03:26,832
+And a team member's name, which only lives in a snippet, now finds the About page.
+
+59
+00:03:27,632 --> 00:03:30,146
+Commit, and tag.
+
+60
+00:03:30,946 --> 00:03:34,358
+And with that, the site is feature complete.
+
+61
+00:03:34,358 --> 00:03:36,995
+Next episode starts the final act.
+
+62
+00:03:36,995 --> 00:03:42,268
+Making the admin pleasant for the client who actually has to use it.
+
+63
+00:03:43,068 --> 00:03:48,982
+Next episode, the editor experience.
+
+64
+00:03:48,982 --> 00:03:52,268
+Thanks for watching.

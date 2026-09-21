@@ -7,6 +7,7 @@
                     <a href="{% pageurl item.page %}"{% if item.active %} aria-current="page"{% endif %}>{{ item.page.title }}</a>
                 </li>
             {% endfor %}
+            <li><a href="{% url 'search' %}"{% if request.resolver_match.url_name == 'search' %} aria-current="page"{% endif %}>Search</a></li>
         </ul>
     </nav>
 {% endif %}

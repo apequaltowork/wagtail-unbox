@@ -9,6 +9,7 @@ from taggit.models import TaggedItemBase
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import Page
+from wagtail.search import index
 
 from home.blocks import BodyBlock
 from home.models import HeroMixin
@@ -76,6 +77,13 @@ class BlogPage(HeroMixin, Page):
     )
     body = StreamField(BodyBlock(), blank=True)
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+
+    # Page.search_fields only covers the title. Everything else has to be named.
+    search_fields = Page.search_fields + [
+        index.SearchField("intro"),
+        index.SearchField("body"),
+        index.FilterField("date"),
+    ]
 
     content_panels = Page.content_panels + [
         FieldPanel("date"),

@@ -1,38 +1,46 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
+{% load wagtailcore_tags %}
 
 {% block body_class %}template-searchresults{% endblock %}
 
-{% block title %}Search{% endblock %}
+{% block title %}{% if search_query %}Search: {{ search_query }}{% else %}Search{% endif %}{% endblock %}
 
 {% block content %}
-<h1>Search</h1>
+    <h1>Search</h1>
 
-<form action="{% url 'search' %}" method="get">
-    <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>
-    <input type="submit" value="Search" class="button">
-</form>
+    <form class="search-form" action="{% url 'search' %}" method="get" role="search">
+        <label for="search-query" class="visually-hidden">Search the site</label>
+        <input id="search-query" type="search" name="query" value="{{ search_query }}" placeholder="Search the site">
+        <button type="submit" class="button button--solid">Search</button>
+    </form>
 
-{% if search_results %}
-<ul>
-    {% for result in search_results %}
-    <li>
-        <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
-        {% if result.search_description %}
-        {{ result.search_description }}
+    {% if search_query %}
+        <p class="result-count">
+            {{ result_count }} result{{ result_count|pluralize }} for <strong>{{ search_query }}</strong>
+        </p>
+
+        {% if search_results %}
+            <ol class="post-list">
+                {% for result in search_results %}
+                    <li>
+                        <p class="result-kind">{{ result.specific_class.get_verbose_name }}</p>
+                        <h2><a href="{% pageurl result %}">{{ result.title }}</a></h2>
+                        {% if result.intro %}
+                            <p>{{ result.intro|striptags|truncatewords:30 }}</p>
+                        {% elif result.search_description %}
+                            <p>{{ result.search_description }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+
+            {% if search_results.paginator.num_pages > 1 %}
+                <nav class="pagination" aria-label="Search results pages">
+                    <span class="prev">{% if search_results.has_previous %}<a href="?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}" rel="prev">&larr; Previous</a>{% endif %}</span>
+                    <span class="count">Page {{ search_results.number }} of {{ search_results.paginator.num_pages }}</span>
+                    <span class="next">{% if search_results.has_next %}<a href="?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}" rel="next">Next &rarr;</a>{% endif %}</span>
+                </nav>
+            {% endif %}
         {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-
-{% if search_results.has_previous %}
-<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
-{% endif %}
-
-{% if search_results.has_next %}
-<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
-{% endif %}
-{% elif search_query %}
-No results found
-{% endif %}
+    {% endif %}
 {% endblock %}

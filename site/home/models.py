@@ -12,6 +12,7 @@ from wagtail.contrib.forms.panels import FormSubmissionsPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
+from wagtail.search import index
 
 from home.blocks import BodyBlock
 
@@ -68,6 +69,11 @@ class HomePage(HeroMixin, Page):
     )
     body = StreamField(BodyBlock(), blank=True)
 
+    search_fields = Page.search_fields + [
+        index.SearchField("intro"),
+        index.SearchField("body"),
+    ]
+
     content_panels = Page.content_panels + HeroMixin.hero_panels + [
         FieldPanel("intro"),
         FieldPanel("body"),
@@ -88,6 +94,11 @@ class StandardPage(HeroMixin, Page):
         help_text="One or two sentences shown under the page title.",
     )
     body = StreamField(BodyBlock(), blank=True)
+
+    search_fields = Page.search_fields + [
+        index.SearchField("intro"),
+        index.SearchField("body"),
+    ]
 
     content_panels = Page.content_panels + HeroMixin.hero_panels + [
         FieldPanel("intro"),

@@ -1,46 +1,38 @@
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import Paginator
 from django.template.response import TemplateResponse
 
 from wagtail.models import Page
 
-# To enable logging of search queries for use with the "Promoted search results" module
-# <https://docs.wagtail.org/en/stable/reference/contrib/searchpromotions.html>
-# uncomment the following line and the lines indicated in the search function
-# (after adding wagtail.contrib.search_promotions to INSTALLED_APPS):
-
-# from wagtail.contrib.search_promotions.models import Query
+RESULTS_PER_PAGE = 10
 
 
 def search(request):
-    search_query = request.GET.get("query", None)
-    page = request.GET.get("page", 1)
+    """Site search.
 
-    # Search
+    Three changes from the view `wagtail start` generates:
+
+    * .public() -- without it, the titles of password-protected and
+      login-only pages show up in results for anyone.
+    * .specific() -- results come back as plain Page objects otherwise, and
+      only Page's fields (title, search_description) are available to show.
+    * paginator.get_page() -- same reason as the journal in episode 7.
+    """
+    search_query = request.GET.get("query", "").strip()
+
     if search_query:
-        search_results = Page.objects.live().search(search_query)
-
-        # To log this query for use with the "Promoted search results" module:
-
-        # query = Query.get(search_query)
-        # query.add_hit()
-
+        search_results = Page.objects.live().public().specific().search(search_query)
     else:
         search_results = Page.objects.none()
 
-    # Pagination
-    paginator = Paginator(search_results, 10)
-    try:
-        search_results = paginator.page(page)
-    except PageNotAnInteger:
-        search_results = paginator.page(1)
-    except EmptyPage:
-        search_results = paginator.page(paginator.num_pages)
+    paginator = Paginator(search_results, RESULTS_PER_PAGE)
+    results_page = paginator.get_page(request.GET.get("page"))
 
     return TemplateResponse(
         request,
         "search/search.html",
         {
             "search_query": search_query,
-            "search_results": search_results,
+            "search_results": results_page,
+            "result_count": paginator.count,
         },
     )

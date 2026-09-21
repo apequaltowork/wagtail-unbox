@@ -127,6 +127,12 @@ class TestimonialBlock(blocks.StructBlock):
 
     testimonial = SnippetChooserBlock("home.Testimonial")
 
+    def get_searchable_content(self, value):
+        # A chooser block contributes nothing to the page's search index by
+        # default -- it only stores an id. Index the words the visitor sees.
+        t = value.get("testimonial")
+        return [t.quote, t.author, t.company] if t else []
+
     class Meta:
         icon = "openquote"
         label = "Testimonial"
@@ -148,6 +154,17 @@ class TeamBlock(blocks.StructBlock):
         context = super().get_context(value, parent_context=parent_context)
         context["members"] = TeamMember.objects.select_related("photo")
         return context
+
+    def get_searchable_content(self, value):
+        # The names are fetched at render time, so the page's index never saw
+        # them. This copies them in when the page is indexed -- and they go
+        # stale if the team changes, until the page is saved or update_index runs.
+        from home.models import TeamMember
+
+        content = [value.get("heading", "")]
+        for m in TeamMember.objects.all():
+            content += [m.name, m.role]
+        return content
 
     class Meta:
         icon = "group"
