@@ -71,7 +71,7 @@ section. Full text in [docs/prerequisites.md](docs/prerequisites.md).
 | 04 | Templates & Static Files | ✅ **Published** — base.html, pageurl/slugurl, plain CSS |
 | 05 | StreamField, Properly | ✅ **Published** — `StructBlock`, `ListBlock`, block templates, and the JSON_VALID migration |
 | 06 | Images & Documents | ✅ **Published** — renditions, focal points, `ImageBlock`, and the stale-rendition bug |
-| 07 | Blog: Parent & Child Pages | `BlogIndexPage`, `subpage_types`, pagination |
+| 07 | Blog: Parent & Child Pages | ✅ **Published** — a `blog` app, page-type rules, `child_of`, pagination |
 | 08 | Snippets & Reusable Content | `register_snippet`, `SnippetChooserBlock` |
 | 09 | Navigation & Site Settings | Menus from the tree, `BaseSiteSetting` |
 | 10 | Forms That Work | `AbstractEmailForm`, contact page, submissions |
@@ -190,17 +190,22 @@ ran, or it will lie on camera.
 - Ep 4 **published**: https://www.youtube.com/watch?v=e-FeE6O9AhM
 - Ep 5 **published**: https://www.youtube.com/watch?v=8_wrJLU57Qw
 - Ep 6 **published**: https://www.youtube.com/watch?v=YYxtwAx4a0w
+- Ep 7 **published**: https://www.youtube.com/watch?v=lvWFyLOHSBo
 - Scripts, commands and publishing metadata for 0a, 0b, 01, 02
 - Render pipeline working end to end
 - Branding: intro/end/thumbnail cards for all 16 episodes
 - Playlist and channel metadata written
 
 **Next**
-1. Ep 7 — Blog: an index page and its posts, `subpage_types`, pagination
-2. Ep 8 onward — same loop: build and verify in `site/`, then script, then render
+1. Ep 8 — Snippets: team members, testimonials, and tags for the journal
+2. Ep 9 onward — same loop: build and verify in `site/`, then script, then render
 
 The animated terminal (`video/term.py`) is proven and reusable: commands type out, then
 real captured output appears. Every code episode from here uses it.
+
+**Deferred to the end of the series**
+- Transcripts: one committed `transcript.md` per episode, generated from `scenes.py`,
+  plus the `.srt` files — all episodes in one pass after ep 14
 
 **Open questions**
 - Deploy target for ep 14 — decide during ep 13
@@ -240,5 +245,12 @@ Each of these cost real time and is worth not rediscovering.
 - **Renditions are database rows, not files.** `get_rendition()` returns a row without ever
   checking the disk, so clearing `media/` leaves the site serving 404s with nothing in the
   logs. `wagtail_update_image_renditions --purge-only` is the fix.
+- **Wagtail's default page-type rule is "anything, anywhere".** Before ep 7 an editor could
+  create a second HomePage inside About. Every page type needs `parent_page_types` and
+  `subpage_types`.
+- **`get_children()` returns `Page`, in tree order.** Ordering it by a subclass field raises
+  `FieldError`. Query the subclass: `BlogPage.objects.child_of(self)`.
+- **Never name a scratch script after a stdlib module.** `types.py` in the temp dir broke
+  `import django` with a circular-import error.
 - **A screenshot slide has a height budget.** A tall page capture scaled to full slide width
   runs off the bottom of the frame. Hold shots to ~78% width, or crop to roughly 2:1.

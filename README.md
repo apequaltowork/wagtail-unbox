@@ -51,7 +51,7 @@ Site: http://127.0.0.1:8000 · Admin: http://127.0.0.1:8000/admin/
 | 04 | [Templates & Static Files](https://www.youtube.com/watch?v=e-FeE6O9AhM) | `ep04-end` |
 | 05 | [StreamField, Properly](https://www.youtube.com/watch?v=8_wrJLU57Qw) | `ep05-end` |
 | 06 | [Images & Documents](https://www.youtube.com/watch?v=YYxtwAx4a0w) | `ep06-end` |
-| 07 | Blog: Parent & Child Pages | `ep07-end` |
+| 07 | [Blog: Parent & Child Pages](https://www.youtube.com/watch?v=lvWFyLOHSBo) | `ep07-end` |
 | 08 | Snippets & Reusable Content | `ep08-end` |
 | 09 | Navigation & Site Settings | `ep09-end` |
 | 10 | Forms That Work | `ep10-end` |

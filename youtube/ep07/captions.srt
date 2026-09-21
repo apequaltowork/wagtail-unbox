@@ -1,0 +1,347 @@
+1
+00:00:00,350 --> 00:00:01,250
+The blog.
+
+2
+00:00:01,250 --> 00:00:03,550
+Parent and child pages.
+
+3
+00:00:04,350 --> 00:00:08,773
+Right now the studio's site is a homepage and an About page.
+
+4
+00:00:08,773 --> 00:00:14,671
+A studio that wants clients needs to say something, so today we build a journal.
+
+5
+00:00:14,671 --> 00:00:19,536
+An index page, posts underneath it, newest first, three at a time.
+
+6
+00:00:20,336 --> 00:00:24,704
+This is the first time we have added an app of our own.
+
+7
+00:00:24,704 --> 00:00:29,232
+Start app blog, and then delete two of the files it made.
+
+8
+00:00:29,232 --> 00:00:34,156
+A Wagtail page app does not use Django's admin.py or views.py.
+
+9
+00:00:34,156 --> 00:00:37,730
+Add blog to installed apps, and we are ready.
+
+10
+00:00:38,530 --> 00:00:42,480
+Why a separate app rather than two more models in home.
+
+11
+00:00:42,480 --> 00:00:48,296
+The blog has its own templates and its own rules, and next episode it grows tags.
+
+12
+00:00:48,296 --> 00:00:50,163
+Home stays the site shell.
+
+13
+00:00:50,163 --> 00:00:55,118
+But the blog still imports the hero and the content blocks from home,
+
+14
+00:00:55,118 --> 00:00:58,852
+so there is one definition of each, used everywhere.
+
+15
+00:00:59,652 --> 00:01:00,471
+Two models.
+
+16
+00:01:00,471 --> 00:01:03,374
+The index is just a page with an intro.
+
+17
+00:01:03,374 --> 00:01:07,542
+A post has a date, an intro, the hero from last episode,
+
+18
+00:01:07,542 --> 00:01:11,264
+and the same StreamField body as every other page.
+
+19
+00:01:11,264 --> 00:01:16,028
+The date is deliberately its own field and not the publish date,
+
+20
+00:01:16,028 --> 00:01:18,335
+because editors backdate posts,
+
+21
+00:01:18,335 --> 00:01:22,950
+and fixing a typo must not move a post to the top of the blog.
+
+22
+00:01:23,750 --> 00:01:29,851
+Before writing any rules, I printed what each existing page type allows underneath
+
+23
+00:01:29,851 --> 00:01:30,074
+it.
+
+24
+00:01:30,074 --> 00:01:31,786
+Look at the About page.
+
+25
+00:01:31,786 --> 00:01:34,836
+It will happily accept a second homepage.
+
+26
+00:01:34,836 --> 00:01:37,738
+And a bare Page, which has no template,
+
+27
+00:01:37,738 --> 00:01:41,384
+and throws an error the moment anybody visits it.
+
+28
+00:01:41,384 --> 00:01:44,360
+Wagtail's default is anything, anywhere.
+
+29
+00:01:45,160 --> 00:01:46,390
+Two lists fix it.
+
+30
+00:01:46,390 --> 00:01:51,240
+Every page type says where it may live, and what may live under it.
+
+31
+00:01:51,240 --> 00:01:56,451
+A post may only sit under the journal, and nothing may sit under a post.
+
+32
+00:01:56,451 --> 00:02:02,458
+The homepage lives at the root, and max count one means there can only ever be one.
+
+33
+00:02:03,258 --> 00:02:04,319
+And checked.
+
+34
+00:02:04,319 --> 00:02:06,263
+A second homepage, no.
+
+35
+00:02:06,263 --> 00:02:08,119
+A second journal, no.
+
+36
+00:02:08,119 --> 00:02:10,594
+A blog post under About, no.
+
+37
+00:02:10,594 --> 00:02:13,245
+A post under the journal, yes.
+
+38
+00:02:13,245 --> 00:02:16,780
+And these rules live entirely in Python.
+
+39
+00:02:16,780 --> 00:02:20,404
+Make migrations says no changes detected,
+
+40
+00:02:20,404 --> 00:02:24,204
+because nothing about the database changed.
+
+41
+00:02:25,004 --> 00:02:29,129
+Now the index page needs its posts, newest first.
+
+42
+00:02:29,129 --> 00:02:32,918
+And here is the query everybody writes first.
+
+43
+00:02:32,918 --> 00:02:37,295
+Get children, live ones, ordered by date descending.
+
+44
+00:02:37,295 --> 00:02:38,558
+It looks right.
+
+45
+00:02:39,358 --> 00:02:40,521
+Field error.
+
+46
+00:02:40,521 --> 00:02:43,233
+Cannot resolve keyword date.
+
+47
+00:02:43,233 --> 00:02:48,562
+And take the order by off, and look at what comes back.
+
+48
+00:02:48,562 --> 00:02:50,015
+Not blog pages.
+
+49
+00:02:50,015 --> 00:02:51,856
+Plain Page objects.
+
+50
+00:02:52,656 --> 00:02:53,570
+Here is why.
+
+51
+00:02:53,570 --> 00:02:58,751
+Get children queries the page table, the one every page type shares.
+
+52
+00:02:58,751 --> 00:03:03,399
+It gives you page objects, in the order they sit in the tree,
+
+53
+00:03:03,399 --> 00:03:06,294
+and the page table has no date column.
+
+54
+00:03:06,294 --> 00:03:11,094
+So ask the blog page model directly, for children of this page.
+
+55
+00:03:11,094 --> 00:03:15,666
+Now you get real blog pages, and you can order them by date.
+
+56
+00:03:16,466 --> 00:03:18,931
+And get context is where it goes.
+
+57
+00:03:18,931 --> 00:03:23,563
+This is how any Wagtail page hands extra data to its template.
+
+58
+00:03:23,563 --> 00:03:26,626
+Call super, add what you need, return it.
+
+59
+00:03:26,626 --> 00:03:29,390
+Here that is the posts, newest first,
+
+60
+00:03:29,390 --> 00:03:35,516
+with the first published date as a tie breaker, and wrapped in Django's paginator.
+
+61
+00:03:36,316 --> 00:03:38,388
+And use get page, not page.
+
+62
+00:03:38,388 --> 00:03:44,680
+The page number comes from the URL, which means anybody can type anything into it.
+
+63
+00:03:44,680 --> 00:03:50,204
+Page raises an exception for rubbish, or for a page that does not exist.
+
+64
+00:03:50,204 --> 00:03:53,734
+Get page just clamps it to something sensible.
+
+65
+00:03:54,534 --> 00:03:57,231
+The index template loops over posts.
+
+66
+00:03:57,231 --> 00:04:01,202
+That is a paginator page, which iterates like a list,
+
+67
+00:04:01,202 --> 00:04:05,397
+and also knows whether there is a next or previous page,
+
+68
+00:04:05,397 --> 00:04:08,544
+which is all the prev and next links need.
+
+69
+00:04:09,344 --> 00:04:11,549
+A small thing I fixed on the way.
+
+70
+00:04:11,549 --> 00:04:16,961
+The page counter jumped from one side of the screen to the other between page one
+
+71
+00:04:16,961 --> 00:04:21,771
+and page three, because a missing link took an item out of the flex row.
+
+72
+00:04:21,771 --> 00:04:26,114
+Three fixed grid slots, empty or not, and it stays in the middle.
+
+73
+00:04:26,914 --> 00:04:29,174
+And here is the journal.
+
+74
+00:04:29,174 --> 00:04:33,412
+Newest first, three posts, and an older link.
+
+75
+00:04:34,212 --> 00:04:35,169
+Page three.
+
+76
+00:04:35,169 --> 00:04:40,997
+The oldest post, a newer link, and the counter still in the middle.
+
+77
+00:04:40,997 --> 00:04:45,955
+Type page 999 into the address bar and you land here too,
+
+78
+00:04:45,955 --> 00:04:48,390
+instead of on an error page.
+
+79
+00:04:49,190 --> 00:04:50,008
+And a post.
+
+80
+00:04:50,008 --> 00:04:55,953
+The date, the title, the intro, the same StreamField blocks as every other page,
+
+81
+00:04:55,953 --> 00:04:59,744
+and a back link to the journal built from the tree.
+
+82
+00:05:00,544 --> 00:05:03,058
+Commit, and tag.
+
+83
+00:05:03,858 --> 00:05:05,908
+Next episode, snippets.
+
+84
+00:05:05,908 --> 00:05:11,703
+Team members and testimonials, written once and used on any page.
+
+85
+00:05:11,703 --> 00:05:13,932
+And tags for the journal.
+
+86
+00:05:14,732 --> 00:05:19,653
+Next episode, snippets.
+
+87
+00:05:19,653 --> 00:05:23,932
+Thanks for watching.

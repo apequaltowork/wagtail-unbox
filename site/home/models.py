@@ -64,6 +64,11 @@ class HomePage(HeroMixin, Page):
         FieldPanel("body"),
     ]
 
+    # The homepage sits directly under the root, and there is only one of it.
+    parent_page_types = ["wagtailcore.Page"]
+    subpage_types = ["home.StandardPage", "blog.BlogIndexPage"]
+    max_count = 1
+
 
 class StandardPage(HeroMixin, Page):
     """A plain content page: About, Services, anything that is mostly words."""
@@ -79,3 +84,6 @@ class StandardPage(HeroMixin, Page):
         FieldPanel("intro"),
         FieldPanel("body"),
     ]
+
+    parent_page_types = ["home.HomePage", "home.StandardPage"]
+    subpage_types = ["home.StandardPage"]
